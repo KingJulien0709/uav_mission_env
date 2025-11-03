@@ -32,14 +32,6 @@ import uav_mission_env
 print(uav_mission_env.__version__)
 ```
 
-## Development
-
-To install in editable mode with development dependencies:
-
-```bash
-pip install -e .
-```
-
 ## License
 
 MIT
