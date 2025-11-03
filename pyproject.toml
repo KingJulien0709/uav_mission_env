@@ -30,4 +30,4 @@ Homepage = "https://github.com/KingJulien0709/uav_mission_env"
 Repository = "https://github.com/KingJulien0709/uav_mission_env"
 
 [tool.setuptools]
-packages = ["uav_mission_env"]
+packages = {find = {}}
