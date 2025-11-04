@@ -1,19 +1,10 @@
 
 from __future__ import annotations
-from multiprocessing.util import info
-
 import numpy as np
-
-from .tools.tool import Tool
-from .tools.observation_tool import Observation
-from .tools.verifiers import Verifier
-from .tools.tool_manager import ToolManager
-from .tools.tool_validator import ToolValidator
-
-from dataclasses import dataclass, field
 from typing import Any, Dict, Optional
-
+from .tools import Tool, Observation, Verifier, ToolManager, ToolValidator
 from .missions.mission_manager import MissionManager
+from .state_manager import StateManager
 
 
 class MissionEnvironment():
@@ -32,7 +23,9 @@ class MissionEnvironment():
         self.tool_manager = ToolManager()
         self.tool_validator = ToolValidator(self.tool_manager, self.state_config)
         
-        self._setup_spaces()
+        # Initialize state manager for transitions
+        self.state_manager = StateManager(self.state_config)
+        
         self._setup_tools()
         self._setup_observations_tools()
         self._setup_verifiers()
@@ -96,10 +89,16 @@ class MissionEnvironment():
 
         action_outputs = self._act_tools(action)
         self._update_state(action_outputs)
+        
+        # Perform state transition
+        transition_context = {**self._get_observation(), **self.state}
+        self.current_state = self.state_manager.get_next_state(self.current_state, transition_context)
+        
+        # Get observation for the new state
         observation = self._get_observation()
 
         reward = 0.0  # Placeholder reward
-        terminated = False  # Placeholder termination condition
+        terminated = self.current_state == 'end'  # Check if we've reached the end state
         truncated = False  # Placeholder truncation condition
         info = action_outputs  # Include tool outputs in info
 
@@ -107,6 +106,7 @@ class MissionEnvironment():
         if self.turns_performed >= self.max_turns:  # Example max turns
             truncated = True
         info['turns_performed'] = self.turns_performed
+        info['current_state'] = self.current_state
         
         return observation, reward, terminated, truncated, info
 
@@ -129,11 +129,18 @@ class MissionEnvironment():
 
     def _get_observation(self) -> dict:
         observation_output = {}
+        
+        # Return empty observation if in 'end' state
+        if self.current_state == 'end':
+            observation_output['current_state'] = self.current_state
+            return observation_output
+        
         for observation_name in self.state_config['states'][self.current_state].get('observations', []):
             observation_tool = self.observations_tools[observation_name]
             obs = observation_tool.execute(self.state)
             observation_output.update(obs)
         observation_output["waypoint"] = self.observations_tools["waypoint"].execute(self.state)["waypoint"]
+        observation_output['current_state'] = self.current_state
         return observation_output
     
     def _act_tools(self, action: dict) -> dict:
