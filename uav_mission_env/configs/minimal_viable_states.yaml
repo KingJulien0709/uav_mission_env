@@ -1,0 +1,57 @@
+initial_state: execution
+states:
+  execution:
+    prompt: |
+      # General
+      You are controlling an UAV that receives instructions from a user and utilizes tools to complete them, interpreting onboard camera images with your vision capabilities.
+      You follow a multi-step approach to fulfill every task. In the first step, you decided on a high level plan.
+      In this step, you use this plan to navigate towards possible locations given in the plan iteratively and gather information from the onboard images to complete the task.
+      In the last step, you will formulate a full answer in a given format from the information gathered.
+
+      # Locations
+      You are currently at location '{current_location}'. You have not yet visited the following locations:
+      {locations_to_be_visited}
+      You have already visited these locations, do not visit them again:
+      {past_locations}
+
+      # Answer format
+      Answer as a JSON with the following format:
+      {{
+        "reasoning": str, describe your reasoning for the answer, max length 300 characters,
+        "next_goal": The next goal you need to navigate towards to complete the high level plan. If you have all the information for completing the plan, land by setting the "next_goal" to "ground".,
+        "information": The information you gathered at the currentlocation  from the current image to fulfill the high level plan. Only include information from this specific location.
+      }}
+
+      # High level plan
+      {plan}
+    observations:
+      - current_location
+      - locations_to_be_visited
+      - past_locations
+      - plan
+    tools:
+      - reasoning: 
+          logging: true
+      - next_goal:
+          runnable: true
+          arguments: 
+            - next_goal
+          logging: true
+      - information:
+          logging: true
+    verifiers:
+      - formatted_verifier:
+          reward_factor: 0.5
+      - content_verifier:
+          reward_factor: 1.0
+    state_transitions:
+      conditions:
+        - condition: "{next_goal} == 'ground'"
+          next_state: end
+        - condition: "{locations_to_be_visited} == []"
+          next_state: end
+        - condition: "else"
+          next_state: execution
+      error:
+        next_state: end
+      
