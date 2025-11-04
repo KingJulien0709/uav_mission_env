@@ -4,9 +4,11 @@ from multiprocessing.util import info
 
 import numpy as np
 
-#from .tools.tool import Tool
-#from .tools.observation_tool import Observation
-#from .tools.verifiers import Verifier
+from .tools.tool import Tool
+from .tools.observation_tool import Observation
+from .tools.verifiers import Verifier
+from .tools.tool_manager import ToolManager
+from .tools.tool_validator import ToolValidator
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, Optional
@@ -25,6 +27,11 @@ class MissionEnvironment():
         )
         self.state: dict = {}
         self.turns_performed = 0
+        
+        # Initialize tool manager and validator
+        self.tool_manager = ToolManager()
+        self.tool_validator = ToolValidator(self.tool_manager, self.state_config)
+        
         self._setup_spaces()
         self._setup_tools()
         self._setup_observations_tools()
@@ -32,21 +39,17 @@ class MissionEnvironment():
 
     def _setup_tools(self) -> None:
         """Initialize tools with necessary dependencies."""
-        tool_list = []
+        # Collect unique tool names from all states
+        tool_names = set()
         for state in self.state_config['states'].values():
-            for tool_item in state.get('tools', []):
-                # Handle both string and dict formats
-                if isinstance(tool_item, str):
-                    tool_name = tool_item
-                elif isinstance(tool_item, dict):
-                    tool_name = list(tool_item.keys())[0]
-                else:
-                    continue
-                if tool_name not in tool_list:
-                    tool_list.append(tool_name) 
+            tool_names.update(state.get('tools', []))
+        
+        # Create tool instances
         self.tools = {}
-        #for tool_name in tool_list:
-            #self.tools[tool_name] = Tool.get_tool_by_name(tool_name, mission_manager=self.mission_manager, state_config=self.state_config)
+        for name in tool_names:
+            tool = Tool.get_tool_by_name(name, mission_manager=self.mission_manager, state_config=self.state_config)
+            tool.specification = self.tool_manager.get_spec(name)
+            self.tools[name] = tool
 
     def _setup_observations_tools(self) -> None:
         """Initialize observations with necessary dependencies."""
@@ -56,8 +59,8 @@ class MissionEnvironment():
                 if observation_name not in observation_list:
                     observation_list.append(observation_name)
         self.observations_tools = {}
-        #for observation_name in set(observation_list):
-        #    self.observations_tools[observation_name] = Observation.get_observation_by_name(observation_name, mission_manager=self.mission_manager)
+        for observation_name in set(observation_list):
+            self.observations_tools[observation_name] = Observation.get_observation_by_name(observation_name, mission_manager=self.mission_manager)
 
     def _setup_verifiers(self) -> None:
         """Initialize verifiers with necessary dependencies."""
@@ -111,6 +114,16 @@ class MissionEnvironment():
         """Clean up the environment when done."""
         pass
 
+    def get_available_tools(self, state: Optional[str] = None) -> list[dict]:
+        """Get tool specifications for available tools in a state."""
+        state = state or self.current_state
+        tool_names = self.tool_validator.get_available_tools(state)
+        return self.tool_manager.get_specs(tool_names)
+
+    def format_tools_for_llm(self, state: Optional[str] = None) -> list[dict]:
+        """Format tools for LLM API (Claude/OpenAI format)."""
+        return self.get_available_tools(state)
+
     def _verify_observations(self) -> float:
         return 0.0
 
@@ -124,14 +137,25 @@ class MissionEnvironment():
         return observation_output
     
     def _act_tools(self, action: dict) -> dict:
-        tool_outputs = {}
+        """Execute tools based on action, with validation."""
+        outputs = {}
+        errors = []
+        
         for tool_name, tool_args in action.items():
+            # Validate that each tool action has correct arguments
+            error = self.tool_validator.validate(tool_name, {tool_name: tool_args}, self.current_state)
+            if error:
+                errors.append(f"{tool_name}: {error}")
+                continue
+            # Execute the tool
             if tool_name in self.tools:
-                tool = self.tools[tool_name]  # Use cached tool instance
-                # Pass the entire action dict to the tool
-                tool_output = tool.use(action)
-                tool_outputs.update(tool_output)
-        return tool_outputs
+                try:
+                    outputs.update(self.tools[tool_name].use(action))
+                except Exception as e:
+                    errors.append(f"{tool_name}: {str(e)}")
+        if errors:
+            outputs['errors'] = errors
+        return outputs
     
     def _update_state(self, tool_outputs: dict) -> None:
         """Update the internal state of the environment based on tool outputs."""

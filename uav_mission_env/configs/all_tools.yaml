@@ -1,0 +1,12 @@
+tools:
+  - name: next_goal
+    description: |
+      Sets the next goal location for the UAV to navigate towards.
+      The next goal can be a specific location out of the available waypoints or "ground" to indicate landing.
+    input_schema:
+      type: "object"
+      properties:
+        next_goal:
+          type: "string"
+          description: "The next goal location or 'ground' to land."
+      required: [next_goal]

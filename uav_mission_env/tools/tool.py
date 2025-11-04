@@ -38,7 +38,6 @@ class Tool:
         return tool_class(logging_enabled=logging_enabled, mission_manager=mission_manager)
 
 
-@
 class NextGoalTool(Tool):
     def __init__(self, logging_enabled: bool = False, mission_manager=None):
         super().__init__(name="next_goal", logging_enabled=logging_enabled, mission_manager=mission_manager)

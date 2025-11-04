@@ -30,15 +30,7 @@ states:
       - past_locations
       - plan
     tools:
-      - reasoning: 
-          logging: true
-      - next_goal:
-          runnable: true
-          arguments: 
-            - next_goal
-          logging: true
-      - information:
-          logging: true
+      - next_goal
     verifiers:
       - formatted_verifier:
           reward_factor: 0.5
