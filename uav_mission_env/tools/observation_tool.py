@@ -60,5 +60,9 @@ class CurrentWaypointObservation(Observation):
         super().__init__(name="waypoint", mission_manager=mission_manager)
 
     def execute(self, state: dict):
-        waypoint = self.mission_manager.waypoint_manager.get_waypoint(self.mission_manager.current_waypoint_id) if self.mission_manager else {}
-        return {self.name: waypoint.to_dict() if waypoint else {}}
+        if self.mission_manager:
+            waypoint = self.mission_manager.waypoint_manager.get_waypoint(self.mission_manager.current_waypoint_id)
+            if waypoint:
+                payload_with_media = {**waypoint.payload, "media": waypoint.media}
+                return {"payload": payload_with_media}
+        return {"payload": {}}

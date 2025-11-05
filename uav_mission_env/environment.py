@@ -97,7 +97,8 @@ class MissionEnvironment():
         # Get observation for the new state
         observation = self._get_observation()
 
-        reward = 0.0  # Placeholder reward
+        reward = 0.0  # Placeholder reward 
+        
         terminated = self.current_state == 'end'  # Check if we've reached the end state
         truncated = False  # Placeholder truncation condition
         info = action_outputs  # Include tool outputs in info
@@ -129,7 +130,6 @@ class MissionEnvironment():
 
     def _get_observation(self) -> dict:
         observation_output = {}
-        
         # Return empty observation if in 'end' state
         if self.current_state == 'end':
             observation_output['current_state'] = self.current_state
@@ -139,7 +139,16 @@ class MissionEnvironment():
             observation_tool = self.observations_tools[observation_name]
             obs = observation_tool.execute(self.state)
             observation_output.update(obs)
-        observation_output["waypoint"] = self.observations_tools["waypoint"].execute(self.state)["waypoint"]
+        
+        # Always include waypoint payload and media
+        waypoint_obs = self.observations_tools["waypoint"].execute(self.state)
+        observation_output.update(waypoint_obs)
+        
+        # Add the current state's prompt to the payload
+        if 'payload' in observation_output:
+            state_prompt = self.state_config['states'][self.current_state].get('prompt', '')
+            observation_output['payload']['prompt'] = state_prompt
+        
         observation_output['current_state'] = self.current_state
         return observation_output
     

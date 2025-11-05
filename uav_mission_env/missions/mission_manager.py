@@ -74,6 +74,7 @@ class MissionManager:
         self.current_mission, self.waypoints = self._sample_mission(num_samples=num_samples)
         self.available_waypoints = self.waypoints.copy()
         self.visited_waypoints = []
+        self.current_waypoint_id = "None"
 
 
         
