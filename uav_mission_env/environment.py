@@ -130,26 +130,32 @@ class MissionEnvironment():
 
     def _get_observation(self) -> dict:
         observation_output = {}
+
+        inner_observations = {}
         # Return empty observation if in 'end' state
         if self.current_state == 'end':
             observation_output['current_state'] = self.current_state
             return observation_output
-        
+
         for observation_name in self.state_config['states'][self.current_state].get('observations', []):
             observation_tool = self.observations_tools[observation_name]
             obs = observation_tool.execute(self.state)
-            observation_output.update(obs)
+            inner_observations.update(obs)
         
-        # Always include waypoint payload and media
+        #print(inner_observations)
+        #print("-"*40)
+        # Always include waypoint obs_payload(media and prompt)
         waypoint_obs = self.observations_tools["waypoint"].execute(self.state)
         observation_output.update(waypoint_obs)
-        
-        # Add the current state's prompt to the payload
-        if 'payload' in observation_output:
-            state_prompt = self.state_config['states'][self.current_state].get('prompt', '')
-            observation_output['payload']['prompt'] = state_prompt
-        
-        observation_output['current_state'] = self.current_state
+        #print(observation_output)
+        #print("-"*40)
+
+        #FIXME list available tools
+
+        state_prompt = self.state_config['states'][self.current_state].get('prompt', '')
+        input_vars = self.state_config['states'][self.current_state]['observations']
+        #print(input_vars)
+        observation_output['obs_payload']['prompt'] = state_prompt.format(**{var: inner_observations[var] for var in input_vars})
         return observation_output
     
     def _act_tools(self, action: dict) -> dict:

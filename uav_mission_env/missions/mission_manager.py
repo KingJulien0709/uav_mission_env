@@ -10,13 +10,12 @@ class MissionManager:
         
         self.current_mission, self.waypoints = self._sample_mission(num_samples=5)
         self.available_waypoints = self.waypoints.copy()
-        self.current_waypoint_id: str = "None"
+        self.current_waypoint_id: str = None
         self.visited_waypoints = []
 
     def _sample_from_metadata(self, num_samples: int):
         with open(self.dataset_metadata_path, 'r') as f:
             metadata = json.load(f)
-        
         sampled_missions = self.random_generator.choice(metadata, size=num_samples, replace=False)
         return sampled_missions
 
@@ -24,35 +23,15 @@ class MissionManager:
         sampled_missions = self._sample_from_metadata(num_samples)
         mission_instruction = ""
         for i, mission in enumerate(sampled_missions):
-            media = {}
-            # Handle both 'media' list and 'image_path' single image
-            if "media" in mission:
-                for j, m in enumerate(mission["media"]):
-                    if m.endswith(('.png', '.jpg', '.jpeg')):
-                        m_type = 'image'
-                    elif m.endswith(('.mp4', '.avi', '.mov')):
-                        m_type = 'video'
-                    else:
-                        m_type = 'unknown'
-                    media[f'media_{j}'] = {
-                        'type': m_type,
-                        'path': m
-                    }
-            elif "image_path" in mission:
-                media['media_0'] = {
-                    'type': 'image',
-                    'path': mission["image_path"]
-                }
-
             waypoint = Waypoint(
                 waypoint_id=f"waypoint_{i}",
-                payload=mission.get("payload", {}),
+                gt_entities=mission.get("gt_entities", {}),
                 is_target=i == 0,  # First sampled mission is the target
-                media=media
+                media=mission.get("media", [])
             )
             self.waypoint_manager.add_waypoint(waypoint)
             if i == 0:
-                mission_instruction = f"Find the box with number {mission['payload']['number']}."
+                mission_instruction = f"Find the box with number {mission['gt_entities']['number']}."
 
         return mission_instruction, self.waypoint_manager.get_random_waypoint_id_list()
     
@@ -74,7 +53,7 @@ class MissionManager:
         self.current_mission, self.waypoints = self._sample_mission(num_samples=num_samples)
         self.available_waypoints = self.waypoints.copy()
         self.visited_waypoints = []
-        self.current_waypoint_id = "None"
+        self.current_waypoint_id = None
 
 
         

@@ -28,7 +28,12 @@ class CurrentLocationObservation(Observation):
         super().__init__(name="current_location", mission_manager=mission_manager)
 
     def execute(self, state: dict) -> str:
-        location = self.mission_manager.current_waypoint_id if self.mission_manager else "unknown"
+        if self.mission_manager and self.mission_manager.current_waypoint_id is not None:
+            location = self.mission_manager.current_waypoint_id
+        elif self.mission_manager.current_waypoint_id is None:
+            location = "unknown" # in case no waypoint has been set yet
+        else:
+            location = "ground" # in case the UAV is on the ground
         return {self.name: location}
     
 class PlanObservation(Observation):
@@ -60,9 +65,9 @@ class CurrentWaypointObservation(Observation):
         super().__init__(name="waypoint", mission_manager=mission_manager)
 
     def execute(self, state: dict):
-        if self.mission_manager:
+        if self.mission_manager and self.mission_manager.current_waypoint_id is not None:
             waypoint = self.mission_manager.waypoint_manager.get_waypoint(self.mission_manager.current_waypoint_id)
             if waypoint:
-                payload_with_media = {**waypoint.payload, "media": waypoint.media}
-                return {"payload": payload_with_media}
-        return {"payload": {}}
+                obs_payload = {"media": waypoint.media}
+                return {"obs_payload": obs_payload}
+        return {"obs_payload": {}}

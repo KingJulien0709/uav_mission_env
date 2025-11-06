@@ -3,18 +3,18 @@ import numpy as np
 class Waypoint:
     def __init__(
             self, waypoint_id: str, 
-            payload: dict = None,
+            gt_entities: dict = None,
             is_target: bool = False, 
             media: dict = None):
         self.waypoint_id = waypoint_id
-        self.payload = payload if payload is not None else {}  # dictionary containing information about the waypoint, for verifiable rewards
+        self.gt_entities = gt_entities if gt_entities is not None else {}  # dictionary containing information about the waypoint, for verifiable rewards
         self.is_target = is_target  # True if this waypoint is the target, False otherwise
         self.media = media if media is not None else {}  # dictionary containing media information related to the waypoint
 
     def to_dict(self) -> dict:
         return {
             "waypoint_id": self.waypoint_id,
-            "payload": self.payload,
+            "gt_entities": self.gt_entities,
             "is_target": self.is_target,
             "media": self.media
         }

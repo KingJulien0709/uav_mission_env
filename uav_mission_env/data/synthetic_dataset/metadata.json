@@ -1,0 +1,602 @@
+[
+    {
+        "id": 0,
+        "gt_entities": {
+            "number": 484
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0000.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "gt_entities": {
+            "number": 550
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0001.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "gt_entities": {
+            "number": 662
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0002.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "gt_entities": {
+            "number": 400
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0003.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "gt_entities": {
+            "number": 923
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0004.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "gt_entities": {
+            "number": 485
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0005.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "gt_entities": {
+            "number": 595
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0006.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "gt_entities": {
+            "number": 863
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0007.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "gt_entities": {
+            "number": 155
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0008.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 9,
+        "gt_entities": {
+            "number": 329
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0009.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 10,
+        "gt_entities": {
+            "number": 884
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0010.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 11,
+        "gt_entities": {
+            "number": 569
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0011.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 12,
+        "gt_entities": {
+            "number": 486
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0012.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 13,
+        "gt_entities": {
+            "number": 795
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0013.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 14,
+        "gt_entities": {
+            "number": 745
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0014.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 15,
+        "gt_entities": {
+            "number": 384
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0015.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 16,
+        "gt_entities": {
+            "number": 673
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0016.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 17,
+        "gt_entities": {
+            "number": 53
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0017.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 18,
+        "gt_entities": {
+            "number": 486
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0018.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 19,
+        "gt_entities": {
+            "number": 514
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0019.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 20,
+        "gt_entities": {
+            "number": 945
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0020.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 21,
+        "gt_entities": {
+            "number": 224
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0021.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 22,
+        "gt_entities": {
+            "number": 268
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0022.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 23,
+        "gt_entities": {
+            "number": 271
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0023.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 24,
+        "gt_entities": {
+            "number": 201
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0024.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 25,
+        "gt_entities": {
+            "number": 164
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0025.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 26,
+        "gt_entities": {
+            "number": 2
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0026.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 27,
+        "gt_entities": {
+            "number": 189
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0027.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 28,
+        "gt_entities": {
+            "number": 632
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0028.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 29,
+        "gt_entities": {
+            "number": 183
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0029.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 30,
+        "gt_entities": {
+            "number": 22
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0030.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 31,
+        "gt_entities": {
+            "number": 503
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0031.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 32,
+        "gt_entities": {
+            "number": 860
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0032.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 33,
+        "gt_entities": {
+            "number": 475
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0033.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 34,
+        "gt_entities": {
+            "number": 444
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0034.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 35,
+        "gt_entities": {
+            "number": 562
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0035.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 36,
+        "gt_entities": {
+            "number": 285
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0036.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 37,
+        "gt_entities": {
+            "number": 747
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0037.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 38,
+        "gt_entities": {
+            "number": 669
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0038.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 39,
+        "gt_entities": {
+            "number": 800
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0039.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 40,
+        "gt_entities": {
+            "number": 844
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0040.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 41,
+        "gt_entities": {
+            "number": 243
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0041.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 42,
+        "gt_entities": {
+            "number": 601
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0042.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 43,
+        "gt_entities": {
+            "number": 678
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0043.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 44,
+        "gt_entities": {
+            "number": 229
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0044.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 45,
+        "gt_entities": {
+            "number": 124
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0045.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 46,
+        "gt_entities": {
+            "number": 600
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0046.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 47,
+        "gt_entities": {
+            "number": 40
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0047.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 48,
+        "gt_entities": {
+            "number": 287
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0048.jpg",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "id": 49,
+        "gt_entities": {
+            "number": 919
+        },
+        "media": [
+            {
+                "path": "synthetic_dataset/sample_0049.jpg",
+                "type": "image"
+            }
+        ]
+    }
+]
