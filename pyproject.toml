@@ -28,4 +28,8 @@ Repository = "https://github.com/KingJulien0709/uav_mission_env"
 packages = {find = {}}
 
 [tool.setuptools.package-data]
-uav_mission_env = ["configs/*.yaml"]
+uav_mission_env = [
+    "configs/*.yaml",
+    "data/synthetic_dataset/*.json",
+    "data/synthetic_dataset/*.jpg"
+]
