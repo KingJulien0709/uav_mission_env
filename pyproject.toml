@@ -26,3 +26,6 @@ Repository = "https://github.com/KingJulien0709/uav_mission_env"
 
 [tool.setuptools]
 packages = {find = {}}
+
+[tool.setuptools.package-data]
+uav_mission_env = ["configs/*.yaml"]
