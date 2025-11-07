@@ -1,6 +1,9 @@
 
 from __future__ import annotations
 import numpy as np
+import yaml
+import os
+from pathlib import Path
 from typing import Any, Dict, Optional
 from .tools import Tool, Observation, Verifier, ToolManager, ToolValidator
 from .missions.mission_manager import MissionManager
@@ -8,8 +11,23 @@ from .state_manager import StateManager
 
 
 class MissionEnvironment():
-    def __init__(self, data_config: dict, state_config: dict, max_turns: int = 10):
+    # Default configuration paths
+    DEFAULT_DATA_CONFIG = {
+        "random_seed": 42,
+        "dataset_metadata_path": "uav_mission_env/data/synthetic_dataset/metadata.json",
+    }
+    DEFAULT_STATE_CONFIG_PATH = "uav_mission_env/configs/minimal_viable_states.yaml"
+    
+    def __init__(self, data_config: Optional[dict] = None, state_config: Optional[dict] = None, max_turns: int = 10):
         self.max_turns = max_turns
+        
+        # Load default configurations if not provided
+        if data_config is None:
+            data_config = self._load_default_data_config()
+        
+        if state_config is None:
+            state_config = self._load_default_state_config()
+        
         self.state_config = state_config
         self.current_state = state_config.get('initial_state', 'execution')
         self.mission_manager = MissionManager(
@@ -29,6 +47,35 @@ class MissionEnvironment():
         self._setup_tools()
         self._setup_observations_tools()
         self._setup_verifiers()
+
+    @classmethod
+    def _load_default_data_config(cls) -> dict:
+        """Load default data configuration."""
+        config = cls.DEFAULT_DATA_CONFIG.copy()
+        
+        # Try to resolve the dataset path relative to the package location
+        package_dir = Path(__file__).parent
+        dataset_path = package_dir / "data" / "synthetic_dataset" / "metadata.json"
+        
+        if dataset_path.exists():
+            config["dataset_metadata_path"] = str(dataset_path)
+        
+        return config
+    
+    @classmethod
+    def _load_default_state_config(cls) -> dict:
+        """Load default state configuration from YAML file."""
+        package_dir = Path(__file__).parent
+        config_path = package_dir / "configs" / "minimal_viable_states.yaml"
+        
+        if not config_path.exists():
+            raise FileNotFoundError(
+                f"Default state config not found at {config_path}. "
+                f"Please provide a state_config parameter."
+            )
+        
+        with open(config_path, 'r') as f:
+            return yaml.safe_load(f)
 
     def _setup_tools(self) -> None:
         """Initialize tools with necessary dependencies."""

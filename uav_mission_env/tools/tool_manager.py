@@ -11,7 +11,9 @@ class ToolManager:
     
     def __init__(self, tools_config_path: Optional[Path] = None):
         if tools_config_path is None:
+            # Get the configs directory relative to this file's location
             tools_config_path = Path(__file__).parent.parent / "configs" / "all_tools.yaml"
+            tools_config_path = tools_config_path.resolve()
         
         with open(tools_config_path, 'r') as f:
             all_tools = yaml.safe_load(f)

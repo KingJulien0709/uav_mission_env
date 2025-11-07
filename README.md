@@ -26,23 +26,48 @@ pip install uav_mission_env
 
 ## Usage
 
-### Basic Example
+### Quick Start with Default Configuration
+
+The simplest way to get started is to use the default configuration:
 
 ```python
-from uav_mission_env.environment import MissionEnvironment
+from uav_mission_env import MissionEnvironment
+
+# Create environment with default configuration
+env = MissionEnvironment()
+
+# Reset and step
+obs = env.reset(seed=42)
+action = {"next_goal": "waypoint_1"}
+obs, reward, terminated, truncated, info = env.step(action)
+
+env.close()
+```
+
+The default configuration uses:
+- **State config**: `uav_mission_env/configs/minimal_viable_states.yaml`
+- **Dataset**: `uav_mission_env/data/synthetic_dataset/metadata.json`
+- **Random seed**: 42
+
+### Custom Configuration
+
+You can also provide custom configurations:
+
+```python
+from uav_mission_env import MissionEnvironment
 import yaml
 
 # Load state configuration
-with open('uav_mission_env/configs/minimal_viable_states.yaml', 'r') as f:
+with open('path/to/your/config.yaml', 'r') as f:
     state_config = yaml.safe_load(f)
 
 # Configure data
 data_config = {
     "dataset_metadata_path": "path/to/metadata.json",
-    "random_seed": 42
+    "random_seed": 123
 }
 
-# Create environment
+# Create environment with custom configuration
 env = MissionEnvironment(
     data_config=data_config,
     state_config=state_config,
