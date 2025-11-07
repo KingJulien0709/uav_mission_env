@@ -210,22 +210,36 @@ class MissionEnvironment():
         return observation_output
     
     def _act_tools(self, action: dict) -> dict:
-        """Execute tools based on action, with validation."""
+        """Execute tools based on action, with validation.
+        
+        Expected action format: {'tool_name': 'example_tool', 'parameters': {'param_0': 'param_0_value'}}
+        """
         outputs = {}
         errors = []
         
-        for tool_name, tool_args in action.items():
-            # Validate that each tool action has correct arguments
-            error = self.tool_validator.validate(tool_name, {tool_name: tool_args}, self.current_state)
-            if error:
-                errors.append(f"{tool_name}: {error}")
-                continue
+        # Extract tool_name and parameters from the new action structure
+        tool_name = action.get('tool_name')
+        parameters = action.get('parameters', {})
+        
+        if not tool_name:
+            errors.append("Missing 'tool_name' in action")
+            outputs['errors'] = errors
+            return outputs
+        
+        # Validate that each tool action has correct arguments
+        error = self.tool_validator.validate(tool_name, parameters, self.current_state)
+        if error:
+            errors.append(f"{tool_name}: {error}")
+        else:
             # Execute the tool
             if tool_name in self.tools:
                 try:
-                    outputs.update(self.tools[tool_name].use(action))
+                    outputs.update(self.tools[tool_name].use(parameters))
                 except Exception as e:
                     errors.append(f"{tool_name}: {str(e)}")
+            else:
+                errors.append(f"Tool '{tool_name}' not found in environment tools")
+        
         if errors:
             outputs['errors'] = errors
         return outputs
