@@ -56,6 +56,7 @@ class MissionEnvironment():
         # Try to resolve the dataset path relative to the package location
         package_dir = Path(__file__).parent
         dataset_path = package_dir / "data" / "synthetic_dataset" / "metadata.json"
+        dataset_path = dataset_path.resolve()
         
         if dataset_path.exists():
             config["dataset_metadata_path"] = str(dataset_path)
@@ -67,6 +68,7 @@ class MissionEnvironment():
         """Load default state configuration from YAML file."""
         package_dir = Path(__file__).parent
         config_path = package_dir / "configs" / "minimal_viable_states.yaml"
+        config_path = config_path.resolve()
         
         if not config_path.exists():
             raise FileNotFoundError(
