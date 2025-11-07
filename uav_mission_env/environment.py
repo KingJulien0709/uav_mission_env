@@ -199,7 +199,8 @@ class MissionEnvironment():
         #print(observation_output)
         #print("-"*40)
 
-        #FIXME list available tools
+        available_tools = self.tool_validator.get_available_tools(self.current_state)
+        observation_output['available_tools'] = available_tools
 
         state_prompt = self.state_config['states'][self.current_state].get('prompt', '')
         input_vars = self.state_config['states'][self.current_state]['observations']
