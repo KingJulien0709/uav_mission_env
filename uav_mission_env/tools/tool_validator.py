@@ -25,7 +25,7 @@ class ToolValidator:
             return f"Tool '{tool_name}' not available in state '{state}'"
         
         # Check required parameters
-        required = spec.get('input_schema', {}).get('required', [])
+        required = spec.get('parameters', {}).get('required', [])
         for param in required:
             if param not in tool_args:
                 return f"Missing required parameter '{param}'"
