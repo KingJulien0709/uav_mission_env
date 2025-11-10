@@ -1,6 +1,7 @@
 from ..missions.mission_manager import MissionManager
 from ..missions.waypoint import Waypoint
 
+
 class Observation:
     def __init__(self, name: str, mission_manager: MissionManager = None):
         self.name = name
@@ -68,6 +69,14 @@ class CurrentWaypointObservation(Observation):
         if self.mission_manager and self.mission_manager.current_waypoint_id is not None:
             waypoint = self.mission_manager.waypoint_manager.get_waypoint(self.mission_manager.current_waypoint_id)
             if waypoint:
-                obs_payload = {"media": waypoint.media}
+
+                obs_payload = {"media": self.encode_media(waypoint.media)}
                 return {"obs_payload": obs_payload}
         return {"obs_payload": {}}
+    
+    def encode_media(self, media_dict: dict) -> dict:
+        # Placeholder for media encoding logic
+        encoded_media = []
+        for media_type, media_path in media_dict.items():
+            from utils.media_utils import load_and_encode_image
+            encoded_media.append({"type": media_type, "media": load_and_encode_image(media_path)})
