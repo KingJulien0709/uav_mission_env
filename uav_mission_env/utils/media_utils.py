@@ -3,7 +3,7 @@ from io import BytesIO
 from PIL import Image
 from pathlib import Path
 import os
-import augmentations_utils
+from . import augmentations_utils
 
 def load_image_from_path(image_path: str) -> Image.Image:
     # Resolve the media path - if it's relative, make it absolute
