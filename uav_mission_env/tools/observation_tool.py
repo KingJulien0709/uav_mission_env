@@ -73,10 +73,11 @@ class CurrentWaypointObservation(Observation):
                 obs_payload = {"media": self.encode_media(waypoint.media)}
                 return {"obs_payload": obs_payload}
         return {"obs_payload": {}}
-    
-    def encode_media(self, media_dict: dict) -> dict:
-        # Placeholder for media encoding logic
+
+    def encode_media(self, media_list: list) -> dict:
+        # Encode media items from the waypoint
+        from ..utils.media_utils import load_and_encode_image
         encoded_media = []
-        for media_type, media_path in media_dict.items():
-            from utils.media_utils import load_and_encode_image
-            encoded_media.append({"type": media_type, "media": load_and_encode_image(media_path)})
+        for media in media_list:
+            encoded_media.append({"type": media.get("type"), "media": load_and_encode_image(media.get("path"))})    
+        return encoded_media

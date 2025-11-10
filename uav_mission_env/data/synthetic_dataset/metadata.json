@@ -6,7 +6,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0000.jpg",
+                "path": "data/synthetic_dataset/sample_0000.jpg",
                 "type": "image"
             }
         ]
@@ -18,7 +18,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0001.jpg",
+                "path": "data/synthetic_dataset/sample_0001.jpg",
                 "type": "image"
             }
         ]
@@ -30,7 +30,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0002.jpg",
+                "path": "data/synthetic_dataset/sample_0002.jpg",
                 "type": "image"
             }
         ]
@@ -42,7 +42,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0003.jpg",
+                "path": "data/synthetic_dataset/sample_0003.jpg",
                 "type": "image"
             }
         ]
@@ -54,7 +54,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0004.jpg",
+                "path": "data/synthetic_dataset/sample_0004.jpg",
                 "type": "image"
             }
         ]
@@ -66,7 +66,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0005.jpg",
+                "path": "data/synthetic_dataset/sample_0005.jpg",
                 "type": "image"
             }
         ]
@@ -78,7 +78,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0006.jpg",
+                "path": "data/synthetic_dataset/sample_0006.jpg",
                 "type": "image"
             }
         ]
@@ -90,7 +90,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0007.jpg",
+                "path": "data/synthetic_dataset/sample_0007.jpg",
                 "type": "image"
             }
         ]
@@ -102,7 +102,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0008.jpg",
+                "path": "data/synthetic_dataset/sample_0008.jpg",
                 "type": "image"
             }
         ]
@@ -114,7 +114,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0009.jpg",
+                "path": "data/synthetic_dataset/sample_0009.jpg",
                 "type": "image"
             }
         ]
@@ -126,7 +126,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0010.jpg",
+                "path": "data/synthetic_dataset/sample_0010.jpg",
                 "type": "image"
             }
         ]
@@ -138,7 +138,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0011.jpg",
+                "path": "data/synthetic_dataset/sample_0011.jpg",
                 "type": "image"
             }
         ]
@@ -150,7 +150,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0012.jpg",
+                "path": "data/synthetic_dataset/sample_0012.jpg",
                 "type": "image"
             }
         ]
@@ -162,7 +162,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0013.jpg",
+                "path": "data/synthetic_dataset/sample_0013.jpg",
                 "type": "image"
             }
         ]
@@ -174,7 +174,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0014.jpg",
+                "path": "data/synthetic_dataset/sample_0014.jpg",
                 "type": "image"
             }
         ]
@@ -186,7 +186,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0015.jpg",
+                "path": "data/synthetic_dataset/sample_0015.jpg",
                 "type": "image"
             }
         ]
@@ -198,7 +198,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0016.jpg",
+                "path": "data/synthetic_dataset/sample_0016.jpg",
                 "type": "image"
             }
         ]
@@ -210,7 +210,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0017.jpg",
+                "path": "data/synthetic_dataset/sample_0017.jpg",
                 "type": "image"
             }
         ]
@@ -222,7 +222,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0018.jpg",
+                "path": "data/synthetic_dataset/sample_0018.jpg",
                 "type": "image"
             }
         ]
@@ -234,7 +234,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0019.jpg",
+                "path": "data/synthetic_dataset/sample_0019.jpg",
                 "type": "image"
             }
         ]
@@ -246,7 +246,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0020.jpg",
+                "path": "data/synthetic_dataset/sample_0020.jpg",
                 "type": "image"
             }
         ]
@@ -258,7 +258,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0021.jpg",
+                "path": "data/synthetic_dataset/sample_0021.jpg",
                 "type": "image"
             }
         ]
@@ -270,7 +270,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0022.jpg",
+                "path": "data/synthetic_dataset/sample_0022.jpg",
                 "type": "image"
             }
         ]
@@ -282,7 +282,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0023.jpg",
+                "path": "data/synthetic_dataset/sample_0023.jpg",
                 "type": "image"
             }
         ]
@@ -294,7 +294,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0024.jpg",
+                "path": "data/synthetic_dataset/sample_0024.jpg",
                 "type": "image"
             }
         ]
@@ -306,7 +306,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0025.jpg",
+                "path": "data/synthetic_dataset/sample_0025.jpg",
                 "type": "image"
             }
         ]
@@ -318,7 +318,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0026.jpg",
+                "path": "data/synthetic_dataset/sample_0026.jpg",
                 "type": "image"
             }
         ]
@@ -330,7 +330,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0027.jpg",
+                "path": "data/synthetic_dataset/sample_0027.jpg",
                 "type": "image"
             }
         ]
@@ -342,7 +342,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0028.jpg",
+                "path": "data/synthetic_dataset/sample_0028.jpg",
                 "type": "image"
             }
         ]
@@ -354,7 +354,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0029.jpg",
+                "path": "data/synthetic_dataset/sample_0029.jpg",
                 "type": "image"
             }
         ]
@@ -366,7 +366,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0030.jpg",
+                "path": "data/synthetic_dataset/sample_0030.jpg",
                 "type": "image"
             }
         ]
@@ -378,7 +378,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0031.jpg",
+                "path": "data/synthetic_dataset/sample_0031.jpg",
                 "type": "image"
             }
         ]
@@ -390,7 +390,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0032.jpg",
+                "path": "data/synthetic_dataset/sample_0032.jpg",
                 "type": "image"
             }
         ]
@@ -402,7 +402,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0033.jpg",
+                "path": "data/synthetic_dataset/sample_0033.jpg",
                 "type": "image"
             }
         ]
@@ -414,7 +414,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0034.jpg",
+                "path": "data/synthetic_dataset/sample_0034.jpg",
                 "type": "image"
             }
         ]
@@ -426,7 +426,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0035.jpg",
+                "path": "data/synthetic_dataset/sample_0035.jpg",
                 "type": "image"
             }
         ]
@@ -438,7 +438,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0036.jpg",
+                "path": "data/synthetic_dataset/sample_0036.jpg",
                 "type": "image"
             }
         ]
@@ -450,7 +450,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0037.jpg",
+                "path": "data/synthetic_dataset/sample_0037.jpg",
                 "type": "image"
             }
         ]
@@ -462,7 +462,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0038.jpg",
+                "path": "data/synthetic_dataset/sample_0038.jpg",
                 "type": "image"
             }
         ]
@@ -474,7 +474,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0039.jpg",
+                "path": "data/synthetic_dataset/sample_0039.jpg",
                 "type": "image"
             }
         ]
@@ -486,7 +486,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0040.jpg",
+                "path": "data/synthetic_dataset/sample_0040.jpg",
                 "type": "image"
             }
         ]
@@ -498,7 +498,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0041.jpg",
+                "path": "data/synthetic_dataset/sample_0041.jpg",
                 "type": "image"
             }
         ]
@@ -510,7 +510,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0042.jpg",
+                "path": "data/synthetic_dataset/sample_0042.jpg",
                 "type": "image"
             }
         ]
@@ -522,7 +522,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0043.jpg",
+                "path": "data/synthetic_dataset/sample_0043.jpg",
                 "type": "image"
             }
         ]
@@ -534,7 +534,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0044.jpg",
+                "path": "data/synthetic_dataset/sample_0044.jpg",
                 "type": "image"
             }
         ]
@@ -546,7 +546,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0045.jpg",
+                "path": "data/synthetic_dataset/sample_0045.jpg",
                 "type": "image"
             }
         ]
@@ -558,7 +558,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0046.jpg",
+                "path": "data/synthetic_dataset/sample_0046.jpg",
                 "type": "image"
             }
         ]
@@ -570,7 +570,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0047.jpg",
+                "path": "data/synthetic_dataset/sample_0047.jpg",
                 "type": "image"
             }
         ]
@@ -582,7 +582,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0048.jpg",
+                "path": "data/synthetic_dataset/sample_0048.jpg",
                 "type": "image"
             }
         ]
@@ -594,7 +594,7 @@
         },
         "media": [
             {
-                "path": "synthetic_dataset/sample_0049.jpg",
+                "path": "data/synthetic_dataset/sample_0049.jpg",
                 "type": "image"
             }
         ]
