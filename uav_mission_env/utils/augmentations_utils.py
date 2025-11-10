@@ -93,6 +93,12 @@ def apply_augmentations(image, functions=[]):
     return augmented_image
 
 def apply_random_augmentation(image, num_augmentations=2):
-    augmentation_functions = list(Augmentation_types)
+    augmentation_functions = [
+        random_rotation_and_crop,
+        apply_additive_noise,
+        apply_salt_and_pepper_noise,
+        add_blur
+    ]
+    num_augmentations = min(num_augmentations, len(augmentation_functions))
     selected_functions = random.sample(augmentation_functions, num_augmentations)
     return apply_augmentations(image, selected_functions)
