@@ -121,10 +121,10 @@ class MissionEnvironment():
                 if verifier_name not in verifier_configs:
                     verifier_configs[verifier_name] = reward_factor
         self.verifiers = {}
-        #for verifier_name, reward_factor in verifier_configs.items():
-        #    self.verifiers[verifier_name] = Verifier.get_verifier_by_name(verifier_name, reward_factor=reward_factor)
+        for verifier_name, reward_factor in verifier_configs.items():
+            self.verifiers[verifier_name] = Verifier.get_verifier_by_name(verifier_name, reward_factor=reward_factor)
 
-    def reset(self, *, seed: Optional[int] = None) -> dict:
+    def reset(self, seed: Optional[int] = None) -> dict:
         self.state.clear()
         if seed is not None:
             self.state["seed"] = seed
@@ -138,19 +138,22 @@ class MissionEnvironment():
 
         action_outputs = self._act_tools(action)
         self._update_state(action_outputs)
-        
+
+        reward = self.verify(action_outputs)
+
         # Perform state transition
         transition_context = {**self._get_observation(), **self.state}
         self.current_state = self.state_manager.get_next_state(self.current_state, transition_context)
         
         # Get observation for the new state
         observation = self._get_observation()
-
-        reward = 0.0  # Placeholder reward 
         
-        terminated = self.current_state == 'end'  # Check if we've reached the end state
+
+        terminated = self.current_state == 'end' or self.current_state == 'error'  # Check if we've reached the end state
         truncated = False  # Placeholder truncation condition
         info = action_outputs  # Include tool outputs in info
+
+        
 
         self.turns_performed += 1
         if self.turns_performed >= self.max_turns:  # Example max turns
@@ -174,16 +177,13 @@ class MissionEnvironment():
         """Format tools for LLM API (Claude/OpenAI format)."""
         return self.get_available_tools(state)
 
-    def _verify_observations(self) -> float:
-        return 0.0
-
     def _get_observation(self) -> dict:
         observation_output = {}
+        observation_output['current_state'] = self.current_state
 
         inner_observations = {}
-        # Return empty observation if in 'end' state
+        # Return early if in 'end' state
         if self.current_state == 'end':
-            observation_output['current_state'] = self.current_state
             return observation_output
 
         for observation_name in self.state_config['states'][self.current_state].get('observations', []):
@@ -248,3 +248,14 @@ class MissionEnvironment():
         """Update the internal state of the environment based on tool outputs."""
         for key, value in tool_outputs.items():
             self.state[key] = value
+
+    def verify(self, tool_outputs: dict) -> float:
+        """Run verifiers on tool outputs and calculate total reward."""
+        state_verifiers = self.state_config['states'][self.current_state].get('verifiers', [])
+        
+        total_reward = 0.0
+        for item in state_verifiers:
+            name = item if isinstance(item, str) else list(item.keys())[0]
+            if name in self.verifiers:
+                total_reward += self.verifiers[name].verify(tool_outputs, self.mission_manager)
+        return total_reward

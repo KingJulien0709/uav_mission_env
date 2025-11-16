@@ -27,8 +27,7 @@ class Tool:
         """Factory method to create tools with dependencies injected."""
         tool_classes = {
             "next_goal": NextGoalTool,
-            "reasoning": ReasoningTool,
-            "information": InformationTool,
+            "report_final_conclusion": ReportFinalConclusionTool,
         }
         tool_class = tool_classes.get(tool_name)
         if tool_class is None:
@@ -60,12 +59,15 @@ class NextGoalTool(Tool):
         return obs_dict
 
 
-class ReasoningTool(Tool):
+class ReportFinalConclusionTool(Tool):
     def __init__(self, logging_enabled: bool = False, mission_manager=None):
-        super().__init__(name="reasoning", logging_enabled=logging_enabled, mission_manager=mission_manager)
+        super().__init__(name="report_final_conclusion", logging_enabled=logging_enabled, mission_manager=mission_manager)
+
+    def use(self, action_args: dict = None):
+        # Placeholder for final conclusion logic
+        log_args = self.log(action_args)
+        return action_args or {}
     
-class InformationTool(Tool):
-    def __init__(self, logging_enabled: bool = False, mission_manager=None):
-        super().__init__(name="information", logging_enabled=logging_enabled, mission_manager=mission_manager)
+
 
     

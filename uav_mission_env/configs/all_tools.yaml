@@ -1,7 +1,7 @@
 tools:
   - name: next_goal
     description: |
-      Sets the next goal location for the UAV to navigate towards.
+      Sets the next goal location for the UAV to navigate towards. Land if no further investigation is needed or all locations have been visited.
       The next goal can be a specific location out of the available waypoints or "ground" to indicate landing.
     parameters:
       type: "object"
@@ -10,3 +10,20 @@ tools:
           type: "string"
           description: "The next goal location or 'ground' to land."
       required: [next_goal]
+  - name: report_final_conclusion
+    description: |
+      Synthesizes the final conclusion based on all gathered information from the UAV mission.
+      This tool should be used when the UAV has completed its data collection and is ready to provide a final answer to the user's instruction.
+    parameters:
+      type: "object"
+      properties:
+        mission_completed_successfully:
+          type: "boolean"
+          description: "Indicates if the mission was completed successfully."
+        conclusion:
+          type: "string"
+          description: "The synthesized final answer to the user's instruction."
+        waypoint:
+          type: "string"
+          description: "The specific waypoint ID or name matching the conclusion (empty string if none)."
+      required: [mission_completed_successfully, conclusion, waypoint]

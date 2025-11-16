@@ -21,16 +21,20 @@ class MissionManager:
 
     def _sample_mission(self, num_samples: int) -> str:
         sampled_missions = self._sample_from_metadata(num_samples)
+        # Randomly select which waypoint will be the target
+        target_index = self.random_generator.randint(0, num_samples)
         mission_instruction = ""
         for i, mission in enumerate(sampled_missions):
             waypoint = Waypoint(
                 waypoint_id=f"waypoint_{i}",
                 gt_entities=mission.get("gt_entities", {}),
-                is_target=i == 0,  # First sampled mission is the target
+                is_target=i == target_index,  # Randomly selected mission is the target
                 media=mission.get("media", [])
             )
             self.waypoint_manager.add_waypoint(waypoint)
-            if i == 0:
+            
+            if i == target_index:
+                self.target_waypoint = waypoint
                 mission_instruction = f"Find the box with number {mission['gt_entities']['number']}."
 
         return mission_instruction, self.waypoint_manager.get_random_waypoint_id_list()

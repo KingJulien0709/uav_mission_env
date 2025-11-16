@@ -1,0 +1,28 @@
+tools:
+  - name: crop_zoom_image
+    description: |
+      Crops a zoomed-in image from the provided full image based on the specified bounding box coordinates.
+    parameters:
+      type: "object"
+      properties:
+        image:
+          type: "string"
+          description: "Base64 encoded string of the full image."
+        bbox:
+          type: "object"
+          description: "Bounding box coordinates for cropping. Coordinates are relative to the full image and normalized between 0 and 1."
+          properties:
+            x_min:
+              type: "float"
+              description: "Minimum x-coordinate of the bounding box."
+            y_min:
+              type: "float"
+              description: "Minimum y-coordinate of the bounding box."
+            x_max:
+              type: "float"
+              description: "Maximum x-coordinate of the bounding box."
+            y_max:
+              type: "float"
+              description: "Maximum y-coordinate of the bounding box."
+          required: [x_min, y_min, x_max, y_max]
+      required: [image, bbox]
