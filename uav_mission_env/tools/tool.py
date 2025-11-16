@@ -1,5 +1,7 @@
 
 
+
+
 class Tool:
     def __init__(self, name: str, logging_enabled: bool = False, arguments: dict = None, mission_manager=None):
         self.name = name
@@ -20,21 +22,6 @@ class Tool:
     def use(self, action_args: dict = None):
         # here can be the specific tool logic
         return self.log(action_args)
-        
-
-    @classmethod
-    def get_tool_by_name(cls, tool_name: str, mission_manager=None, state_config: dict = {}, current_state: str = None):
-        """Factory method to create tools with dependencies injected."""
-        tool_classes = {
-            "next_goal": NextGoalTool,
-            "report_final_conclusion": ReportFinalConclusionTool,
-        }
-        tool_class = tool_classes.get(tool_name)
-        if tool_class is None:
-            raise ValueError(f"Tool '{tool_name}' not found.")
-        # Instantiate with dependencies (simplified - always enable logging for now)
-        logging_enabled = True
-        return tool_class(logging_enabled=logging_enabled, mission_manager=mission_manager)
 
 
 class NextGoalTool(Tool):
@@ -67,7 +54,27 @@ class ReportFinalConclusionTool(Tool):
         # Placeholder for final conclusion logic
         log_args = self.log(action_args)
         return action_args or {}
+
+
+# Factory method added after subclasses are defined
+@classmethod
+def get_tool_by_name(cls, tool_name: str, mission_manager=None, state_config: dict = {}, current_state: str = None):
+    """Factory method to create tools with dependencies injected."""
+    tool_classes = {
+        "next_goal": NextGoalTool,
+        "report_final_conclusion": ReportFinalConclusionTool,
+    }
+    tool_class = tool_classes.get(tool_name)
+    if tool_class is None:
+        raise ValueError(f"Tool '{tool_name}' not found.")
+    # Instantiate with dependencies (simplified - always enable logging for now)
+    logging_enabled = True
+    return tool_class(logging_enabled=logging_enabled, mission_manager=mission_manager)
+
+# Attach the factory method to the Tool class
+Tool.get_tool_by_name = get_tool_by_name
     
+
 
 
     
