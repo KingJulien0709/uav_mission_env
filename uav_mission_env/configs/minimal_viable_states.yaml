@@ -4,7 +4,7 @@ states:
     prompt: |
       You are a **UAV controller** executing a multi-step task plan using onboard camera images and tools.
       
-      **Current Goal:** Execute the next step of the high-level plan by navigating to a location and gathering required information from the current image.
+      **Current Goal:** Execute the next step of the high-level plan by navigating to a location and gathering required information from the current waypoint and its images(if available).
 
       ## Context & State
       * **Current Location:** {current_location}
@@ -16,7 +16,7 @@ states:
       Provide a JSON object with:
       {{
         "reasoning": str, // Max 300 chars. Justify the next action (navigation/tool/info gathering).
-        "tool_call": str, // Call one tool to fulfill the plan step. Must use the specified tool format.
+        "tool_call": dict, // Call one tool to fulfill the plan step. Must use the specified tool format.
         "information": str // Information gathered *only* from the current images at {current_location} with relevant context for the plan.
       }}
 
