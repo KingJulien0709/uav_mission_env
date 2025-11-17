@@ -148,12 +148,9 @@ class MissionEnvironment():
         # Get observation for the new state
         observation = self._get_observation()
         
-
         terminated = self.current_state == 'end' or self.current_state == 'error'  # Check if we've reached the end state
         truncated = False  # Placeholder truncation condition
         info = action_outputs  # Include tool outputs in info
-
-        
 
         self.turns_performed += 1
         if self.turns_performed >= self.max_turns:  # Example max turns
@@ -207,6 +204,7 @@ class MissionEnvironment():
         input_vars = self.state_config['states'][self.current_state]['observations']
         #print(input_vars)
         observation_output['obs_payload']['prompt'] = state_prompt.format(**{var: inner_observations[var] for var in input_vars})
+        observation_output['obs_payload']['format'] = self.observe_format_for_state(self.current_state)
         return observation_output
     
     def _act_tools(self, action: dict) -> dict:
@@ -259,3 +257,11 @@ class MissionEnvironment():
             if name in self.verifiers:
                 total_reward += self.verifiers[name].verify(tool_outputs, self.mission_manager)
         return total_reward
+    
+    def observe_format_for_state(self, state: str) -> dict:
+        """Get the required observation format for a given state."""
+        observation_format = {
+            "output_tags": self.state_config.get('output_tags', {}),
+            "output_keys": self.state_config['states'][state].get('output_keys', {})
+        }
+        return observation_format

@@ -1,4 +1,7 @@
 initial_state: execution
+output_tags:
+  think: ["<think>", "</think>"]
+  final_answer: ["<final_answer>", "</final_answer>"]
 states:
   execution:
     prompt: |
@@ -24,6 +27,13 @@ states:
       }}
 
       ## Available Tools (Tool Specification for 'tool_call')
+    output_keys:
+      - justification:
+          type: str
+      - tool_call:
+          type: dict
+      - information:
+          type: str
     observations:
       - current_location
       - locations_to_be_visited
@@ -57,7 +67,7 @@ states:
       Provide a JSON surounded by <final_answer></final_answer> tags with the following fields:
       {{
         "justification": str, // Max 300 chars. Justify the final conclusion based on gathered information and the reasoning process.
-        "tool_call": str  // Call the 'report_final_conclusion' tool with the required parameters.
+        "tool_call": dict  // Call the 'report_final_conclusion' tool with the required parameters.
       }}
 
       ## Context
@@ -65,6 +75,11 @@ states:
       * **Information Gathered (Output of all waypoints based on previous conversations)**
 
       ## Available Tools:
+    output_keys:
+      - justification:
+          type: str
+      - tool_call:
+          type: dict
     observations:
       - plan
     tools:
