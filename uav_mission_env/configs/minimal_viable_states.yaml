@@ -13,7 +13,7 @@ states:
       * **High-Level Plan:** {plan}
 
       ## Reasoning 
-      Put your thought process inside the <thought></thought> tags. The final answer must be inside the <final_answer></final_answer> tags
+      Put your thought process inside the <think></think> tags. The final answer must be inside the <final_answer></final_answer> tags
       
       ## Response Format
       Provide a JSON surounded by <final_answer></final_answer> tags with the following fields:
@@ -51,7 +51,7 @@ states:
       **Current Goal:** Synthesize the final answer to the user's instruction using the complete set of gathered information.
 
       ## Reasoning 
-      Put your thought process inside the <thought></thought> tags. The final answer must be inside the <final_answer></final_answer> tags
+      Put your thought process inside the <think></think> tags. The final answer must be inside the <final_answer></final_answer> tags
       
       ## Response Format
       Provide a JSON surounded by <final_answer></final_answer> tags with the following fields:
