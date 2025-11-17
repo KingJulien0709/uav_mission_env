@@ -17,7 +17,7 @@ states:
       {{
         "reasoning": str, // Max 300 chars. Justify the next action (navigation/tool/info gathering).
         "tool_call": dict, // Call one tool to fulfill the plan step. Must use the specified tool format for ToolCallAction.
-        "information": str // Information gathered *only* from the current images at {current_location} with relevant context for the plan.
+        "information": str // Information gathered from the current images at {current_location} (if available) with relevant context for the plan.
       }}
 
       ## Available Tools (Tool Specification for 'tool_call')
