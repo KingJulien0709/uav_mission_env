@@ -12,10 +12,13 @@ states:
       * **Visited Locations (Do not revisit):** {past_locations}
       * **High-Level Plan:** {plan}
 
+      ## Reasoning 
+      Put your thought process inside the <thought></thought> tags. Provide a summary of your reasoning as justification in the response.
+      
       ## Response Format
       Provide a JSON object with:
       {{
-        "reasoning": str, // Max 300 chars. Justify the next action (navigation/tool/info gathering).
+        "justification": str, // Max 300 chars. Justify the next action (navigation/tool/info gathering).
         "tool_call": dict, // Call one tool to fulfill the plan step. Must use the specified tool format for ToolCallAction.
         "information": str // Information gathered from the current images at {current_location} (if available) with relevant context for the plan.
       }}
@@ -47,10 +50,13 @@ states:
 
       **Current Goal:** Synthesize the final answer to the user's instruction using the complete set of gathered information.
 
+      ## Reasoning 
+      Put your thought process inside the <thought></thought> tags. Provide a summary of your reasoning as justification in the response.
+      
       ## Response Format
       Provide a JSON object with the final conclusion:
       {{
-        "reasoning": str, // Max 300 chars. Justify the final conclusion based on gathered information.
+        "justification": str, // Max 300 chars. Justify the final conclusion based on gathered information.
         "tool_call": str  // Call the 'report_final_conclusion' tool with the required parameters.
       }}
 
