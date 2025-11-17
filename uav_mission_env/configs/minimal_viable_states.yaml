@@ -16,7 +16,7 @@ states:
       Put your thought process inside the <thought></thought> tags. The final answer must be inside the <final_answer></final_answer> tags
       
       ## Response Format
-      Provide a JSON object with:
+      Provide a JSON surounded by <final_answer></final_answer> tags with the following fields:
       {{
         "justification": str, // Max 300 chars. Justify the next action (navigation/tool/info gathering) based on the reasoning process.
         "tool_call": dict, // Call one tool to fulfill the plan step. Must use the specified tool format for ToolCallAction.
@@ -54,7 +54,7 @@ states:
       Put your thought process inside the <thought></thought> tags. The final answer must be inside the <final_answer></final_answer> tags
       
       ## Response Format
-      Provide a JSON object with the final conclusion:
+      Provide a JSON surounded by <final_answer></final_answer> tags with the following fields:
       {{
         "justification": str, // Max 300 chars. Justify the final conclusion based on gathered information and the reasoning process.
         "tool_call": str  // Call the 'report_final_conclusion' tool with the required parameters.
