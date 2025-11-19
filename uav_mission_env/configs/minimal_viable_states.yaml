@@ -89,5 +89,5 @@ states:
           reward_factor: 2.0
     state_transitions:
       conditions:
-        - condition: "true"
+        - condition: "True"
           next_state: end
