@@ -26,6 +26,8 @@ states:
         "information": str // Information gathered from the current images at {current_location} (if available) with relevant context for the plan.
       }}
 
+      Never forget the <final_answer> tags in your response.
+
       ## Available Tools (Tool Specification for 'tool_call')
     output_keys:
       - justification:
@@ -69,6 +71,8 @@ states:
         "justification": str, // Max 300 chars. Justify the final conclusion based on gathered information and the reasoning process.
         "tool_call": dict  // Call the 'report_final_conclusion' tool with the required parameters.
       }}
+      
+      Never forget the <final_answer> tags in your response.
 
       ## Context
       * **User Instruction:** {plan}
