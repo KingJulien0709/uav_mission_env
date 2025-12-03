@@ -1,4 +1,7 @@
 initial_state: execution
+image_resolution: 
+  width: 640
+  height: 480
 output_tags:
   think: ["<think>", "</think>"]
   final_answer: ["<final_answer>", "</final_answer>"]
@@ -21,7 +24,7 @@ states:
       ## Response Format
       Provide the answer with <final_answer>JSON-Object</final_answer> with the following fields:
       {{
-        "justification": str, // Max 300 chars. Justify the next action (navigation/tool/info gathering) based on the reasoning process.
+        "justification": str, // Justify the next action (navigation/tool/info gathering) based on the reasoning process.
         "tool_call": dict, // Call one tool to fulfill the plan step. Must use the specified tool format for ToolCallAction.
         "information": str // Information gathered from the current images at {current_location} (if available) with relevant context for the plan.
       }}
@@ -68,7 +71,7 @@ states:
       ## Response Format
       Provide the answer with <final_answer>JSON-Object</final_answer> with the following fields:
       {{
-        "justification": str, // Max 300 chars. Justify the final conclusion based on gathered information and the reasoning process.
+        "justification": str, // Justify the final conclusion based on gathered information and the reasoning process.
         "tool_call": dict  // Call the 'report_final_conclusion' tool with the required parameters.
       }}
       

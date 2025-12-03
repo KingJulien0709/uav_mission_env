@@ -30,7 +30,7 @@ def base64_str_to_pil_image(base64_str: str) -> Image.Image:
     image_data = b64decode(base64_str)
     return Image.open(BytesIO(image_data))
 
-def load_and_encode_image(image_path: str, augment: bool = True) -> str:
+def load_and_encode_image(image_path: str, augment: bool = True,image_resolution=(640, 480)) -> str:
 
     format = image_path.split('.')[-1].upper()
     # PIL uses 'JPEG' not 'JPG'
@@ -39,4 +39,6 @@ def load_and_encode_image(image_path: str, augment: bool = True) -> str:
     image = load_image_from_path(image_path)
     if augment:
         image = augmentations_utils.apply_random_augmentation(image)
+    if image_resolution:
+        image = image.resize(image_resolution)
     return pil_image_to_base64_str(image, format=format)

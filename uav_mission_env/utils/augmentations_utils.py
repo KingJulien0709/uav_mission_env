@@ -102,3 +102,4 @@ def apply_random_augmentation(image, num_augmentations=2):
     num_augmentations = min(num_augmentations, len(augmentation_functions))
     selected_functions = random.sample(augmentation_functions, num_augmentations)
     return apply_augmentations(image, selected_functions)
+

@@ -69,15 +69,19 @@ class CurrentWaypointObservation(Observation):
         if self.mission_manager and self.mission_manager.current_waypoint_id is not None:
             waypoint = self.mission_manager.waypoint_manager.get_waypoint(self.mission_manager.current_waypoint_id)
             if waypoint:
-
-                obs_payload = {"media": self.encode_media(waypoint.media)}
+                #get image resolution from config
+                image_res_config = state.get("image_resolution", {})
+                width = image_res_config.get("width", 640)
+                height = image_res_config.get("height", 480)
+                
+                obs_payload = {"media": self.encode_media(waypoint.media, image_resolution=(width, height)),}
                 return {"obs_payload": obs_payload}
         return {"obs_payload": {}}
 
-    def encode_media(self, media_list: list) -> dict:
+    def encode_media(self, media_list: list, image_resolution=(640, 480)) -> dict:
         # Encode media items from the waypoint
         from ..utils.media_utils import load_and_encode_image
         encoded_media = []
         for media in media_list:
-            encoded_media.append({"type": media.get("type"), "media": load_and_encode_image(media.get("path"))})    
+            encoded_media.append({"type": media.get("type"), "media": load_and_encode_image(media.get("path"), image_resolution=image_resolution)})    
         return encoded_media
