@@ -1,13 +1,13 @@
-
 from __future__ import annotations
 import numpy as np
 import yaml
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Type, List
 from .tools import Tool, Observation, Verifier, ToolManager, ToolValidator
 from .missions.mission_manager import MissionManager
 from .state_manager import StateManager
+from .utils.schema_utils import generate_schema_from_keys
 
 
 class MissionEnvironment():
@@ -204,7 +204,7 @@ class MissionEnvironment():
         input_vars = self.state_config['states'][self.current_state]['observations']
         #print(input_vars)
         observation_output['obs_payload']['prompt'] = state_prompt.format(**{var: inner_observations[var] for var in input_vars})
-        observation_output['obs_payload']['format'] = self.observe_format_for_state(self.current_state)
+        observation_output['obs_payload']['output_schema'] = self.observe_format_for_state(self.current_state)
         return observation_output
     
     def _act_tools(self, action: dict) -> dict:
@@ -260,8 +260,10 @@ class MissionEnvironment():
     
     def observe_format_for_state(self, state: str) -> dict:
         """Get the required observation format for a given state."""
+        output_keys = self.state_config['states'][state].get('output_keys', [])
+        json_schema = generate_schema_from_keys(output_keys)
+        
         observation_format = {
-            "output_tags": self.state_config.get('output_tags', {}),
-            "output_keys": self.state_config['states'][state].get('output_keys', {})
+            "json_schema": json_schema
         }
         return observation_format

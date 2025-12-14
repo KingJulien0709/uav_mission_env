@@ -2,9 +2,6 @@ initial_state: execution
 image_resolution: 
   width: 640
   height: 480
-output_tags:
-  think: ["<think>", "</think>"]
-  final_answer: ["<final_answer>", "</final_answer>"]
 states:
   execution:
     prompt: |
@@ -19,26 +16,26 @@ states:
       * **High-Level Plan:** {plan}
 
       ## Reasoning 
-      Put your thought process inside the <think></think> tags. The final answer must be inside the <final_answer></final_answer> tags
+      Put your thought process inside the <think></think> tags. Than return the final answer outside the tags.
       
       ## Response Format
-      Provide the answer with <final_answer>JSON-Object</final_answer> with the following fields:
+      Provide the answer as JSON-Object with the following fields:
       {{
         "justification": str, // Justify the next action (navigation/tool/info gathering) based on the reasoning process.
-        "tool_call": dict, // Call one tool to fulfill the plan step. Must use the specified tool format for ToolCallAction.
+        "tool_call": object, // Call one tool to fulfill the plan step. Must use the specified tool format for ToolCallAction.
         "information": str // Information gathered from the current images at {current_location} (if available) with relevant context for the plan.
       }}
-
-      Never forget the <final_answer> tags in your response.
 
       ## Available Tools (Tool Specification for 'tool_call')
     output_keys:
       - justification:
-          type: str
+          type: string
+          max_length: 300
       - tool_call:
-          type: dict
+          type: object
       - information:
-          type: str
+          type: string
+          max_length: 300
     observations:
       - current_location
       - locations_to_be_visited
@@ -66,16 +63,14 @@ states:
       **Current Goal:** Synthesize the final answer to the user's instruction using the complete set of gathered information.
 
       ## Reasoning 
-      Put your thought process inside the <think></think> tags. The final answer must be inside the <final_answer></final_answer> tags
+      Put your thought process inside the <think></think> tags. Than return the final answer outside the tags.
       
       ## Response Format
-      Provide the answer with <final_answer>JSON-Object</final_answer> with the following fields:
+      Provide the answer as JSON-Object with the following fields:
       {{
         "justification": str, // Justify the final conclusion based on gathered information and the reasoning process.
-        "tool_call": dict  // Call the 'report_final_conclusion' tool with the required parameters.
+        "tool_call": object  // Call the 'report_final_conclusion' tool with the required parameters.
       }}
-      
-      Never forget the <final_answer> tags in your response.
 
       ## Context
       * **User Instruction:** {plan}
@@ -84,9 +79,10 @@ states:
       ## Available Tools:
     output_keys:
       - justification:
-          type: str
+          type: string
+          max_length: 300
       - tool_call:
-          type: dict
+          type: object
     observations:
       - plan
     tools:
