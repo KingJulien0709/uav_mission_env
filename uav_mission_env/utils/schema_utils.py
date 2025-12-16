@@ -39,7 +39,7 @@ def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[
     grammar_lines = []
 
     # 1. Basic Primitives
-    grammar_lines.append(r'space ::= | " " | "\n" [ \t]{0,5}')
+    grammar_lines.append(r'space ::= [ \t\n]*')
     grammar_lines.append(r'char ::= [^"\\\x7F\x00-\x1F] | [\\] (["\\bfnrt] | "u" [0-9a-fA-F]{4})')
     grammar_lines.append(r'string ::= "\"" char* "\"" space')
     grammar_lines.append(r'boolean ::= ("true" | "false") space')
