@@ -7,7 +7,7 @@ from typing import Any, Dict, Optional, Type, List
 from .tools import Tool, Observation, Verifier, ToolManager, ToolValidator
 from .missions.mission_manager import MissionManager
 from .state_manager import StateManager
-from .utils.schema_utils import generate_schema_from_keys
+from .utils.schema_utils import create_json_schema_from_keys, create_gbnf_grammar
 
 
 class MissionEnvironment():
@@ -261,9 +261,12 @@ class MissionEnvironment():
     def observe_format_for_state(self, state: str) -> dict:
         """Get the required observation format for a given state."""
         output_keys = self.state_config['states'][state].get('output_keys', [])
-        json_schema = generate_schema_from_keys(output_keys)
+        json_schema = create_json_schema_from_keys(output_keys)
+        available_tools = self.tool_validator.get_available_tools(state)
+        gbnf_grammar = create_gbnf_grammar(output_keys, available_tools)
         
         observation_format = {
-            "json_schema": json_schema
+            "json_schema": json_schema,
+            "gbnf_grammar": gbnf_grammar
         }
         return observation_format
