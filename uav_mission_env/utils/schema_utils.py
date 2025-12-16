@@ -41,7 +41,7 @@ def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[
     # ?start: Optional thinking -> strict JSON object
     # thinking: <think> ... </think> (Max 8192 chars, lazy match)
     grammar_parts = [
-        r'?start: thinking? json_output',
+        r'root: thinking? json_output',
         r'thinking: "<think>" /[\s\S]{0,__THINK_LIMIT__}?/ "</think>" "\n"?',
     ]
 
@@ -81,7 +81,7 @@ def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[
             # For 'tool_call', we usually want a specific nested structure
             if f_name == "tool_call":
                 # Hardcoded structure for tool_call as discussed previously
-                field_definitions.append(f'{rule_name}: "\\" {f_name} \\": tool_obj')
+                field_definitions.append(f'{rule_name}: "\\" {f_name} \\":" tool_obj')
                 
                 if tool_name_list:
                     # Create a rule that matches only the allowed tool names
