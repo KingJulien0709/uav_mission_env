@@ -35,24 +35,28 @@ def create_json_schema_from_keys(output_keys: List[Dict[str, Any]]) -> Dict[str,
 def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[str]) -> str:
     """
     Transforms a schema definition into a GBNF grammar string.
+    Refactored to prevent infinite whitespace generation by handling spacing in structures.
     """
     grammar_lines = []
 
-    # 1. Basic Primitives
+    # 1. Basic Primitives (Removed trailing 'space' from these)
     grammar_lines.append(r'space ::= [ \t\n]*')
     grammar_lines.append(r'char ::= [^"\\\x7F\x00-\x1F] | [\\] (["\\bfnrt] | "u" [0-9a-fA-F]{4})')
-    grammar_lines.append(r'string ::= "\"" char* "\"" space')
-    grammar_lines.append(r'boolean ::= ("true" | "false") space')
-    grammar_lines.append(r'null ::= "null" space')
-    grammar_lines.append(r'number ::= ("-"? ([0-9] | [1-9] [0-9]*)) ("." [0-9]+)? ([eE] [-+]? [0-9]+)? space')
+    grammar_lines.append(r'string ::= "\"" char* "\""')  # Removed trailing space
+    grammar_lines.append(r'boolean ::= ("true" | "false")') # Removed trailing space
+    grammar_lines.append(r'null ::= "null"') # Removed trailing space
+    grammar_lines.append(r'number ::= ("-"? ([0-9] | [1-9] [0-9]*)) ("." [0-9]+)? ([eE] [-+]? [0-9]+)?') # Removed trailing space
 
-    # 2. Recursive JSON (simplified)
+    # 2. Recursive JSON (Added 'space' to the structure)
     grammar_lines.append(r'gen-value ::= string | number | gen-object | gen-array | boolean | null')
-    grammar_lines.append(r'gen-object ::= "{" space (string ":" space gen-value ("," space string ":" space gen-value)*)? "}" space')
-    grammar_lines.append(r'gen-array ::= "[" space (gen-value ("," space gen-value)*)? "]" space')
+    
+    # Logic: "{" space ( key space ":" space value space ("," space key space ":" space value space)* )? "}"
+    grammar_lines.append(r'gen-object ::= "{" space (string space ":" space gen-value space ("," space string space ":" space gen-value space)*)? "}"')
+    
+    # Logic: "[" space ( value space ("," space value space)* )? "]"
+    grammar_lines.append(r'gen-array ::= "[" space (gen-value space ("," space gen-value space)*)? "]"')
 
-    # 3. Thinking Rule
-    # Matches content until "</" appears
+    # 3. Thinking Rule (Unchanged)
     grammar_lines.append(r'thinking-char ::= [^<] | ( "<" [^/] )')
     grammar_lines.append(r'thinking-content ::= thinking-char {0,__THINK_LIMIT__}')
     grammar_lines.append(r'thinking ::= "<think>" thinking-content "</think>" space')
@@ -73,32 +77,35 @@ def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[
 
         val_rule_name = f"val-{f_name}"
 
+        # Note: We remove 'space' from the end of all these specific value rules
         if f_type == "string":
-            # Specific length string
-            grammar_lines.append(f'{val_rule_name} ::= "\\"" char{{0,{f_len}}} "\\"" space')
+            grammar_lines.append(f'{val_rule_name} ::= "\\"" char{{0,{f_len}}} "\\""')
         elif f_type == "object":
             if f_name == "tool_call":
                 if tool_name_list:
                     tool_opts = " | ".join([f'"\\"{t}\\\""' for t in tool_name_list])
-                    grammar_lines.append(f'tool-name ::= ({tool_opts}) space')
+                    grammar_lines.append(f'tool-name ::= ({tool_opts})') # No trailing space
                 else:
                     grammar_lines.append(f'tool-name ::= string')
 
-                # tool_call object structure
-                grammar_lines.append(f'{val_rule_name} ::= "{{" space "\\"name\\"" space ":" space tool-name "," space "\\"parameters\\"" space ":" space gen-object "}}" space')
+                # tool_call object structure with explicit spacing
+                grammar_lines.append(f'{val_rule_name} ::= "{{" space "\\"name\\"" space ":" space tool-name space "," space "\\"parameters\\"" space ":" space gen-object space "}}"')
             else:
                 grammar_lines.append(f'{val_rule_name} ::= gen-object')
         else:
-            # Fallback
             grammar_lines.append(f'{val_rule_name} ::= gen-value')
 
-        # KV Rule
+        # KV Rule: "key" space ":" space value
+        # We do NOT put space at the end here, we handle it in the joiner below
         kv_rule = f'"\\"{f_name}\\"" space ":" space {val_rule_name}'
         field_kv_rules.append(kv_rule)
 
     # 5. Root Object
-    fields_joined = ' "," space '.join(field_kv_rules)
-    grammar_lines.append(f'json-output ::= "{{" space {fields_joined} "}}" space')
+    # Joiner must provide the separator: space "," space
+    fields_joined = ' space "," space '.join(field_kv_rules)
+    
+    # Root structure: "{" space FIELDS space "}"
+    grammar_lines.append(f'json-output ::= "{{" space {fields_joined} space "}}" space')
 
     grammar_lines.append(r'root ::= thinking? json-output')
 
