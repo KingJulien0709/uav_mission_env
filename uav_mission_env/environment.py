@@ -42,7 +42,8 @@ class MissionEnvironment():
 
         # Determine mission generator
         if mission_generator is None and mission_config_path is not None:
-            mission_generator = ConfigMissionGenerator(mission_config_path)
+            resolved_path = self._resolve_mission_config_path(mission_config_path)
+            mission_generator = ConfigMissionGenerator(resolved_path)
 
         self.mission_manager = MissionManager(
             dataset_metadata_path=data_config.get("dataset_metadata_path", ""),
@@ -108,6 +109,22 @@ class MissionEnvironment():
             pass
         
         return str(config_path)
+
+    @classmethod
+    def _resolve_mission_config_path(cls, config_path: str) -> str:
+        """Resolve mission config path, checking default location if file not found."""
+        path_obj = Path(config_path)
+        if path_obj.exists():
+            return str(path_obj.resolve())
+            
+        # Check in default configs directory
+        package_dir = Path(__file__).parent
+        default_path = package_dir / "configs" / config_path
+        if default_path.exists():
+            return str(default_path.resolve())
+            
+        # Return original path to let ConfigMissionGenerator handle the error (or raise here)
+        return config_path
 
     def _setup_tools(self) -> None:
         """Initialize tools with necessary dependencies."""

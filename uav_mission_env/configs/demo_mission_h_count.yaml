@@ -1,0 +1,44 @@
+instruction: "How many 'h' are in the streetname of house number 12?"
+waypoints:
+  - waypoint_id: "waypoint_0"
+    gt_entities:
+      number: null
+    is_target: false
+    media:
+      - path: "data/demo/sample_0.jpg"
+        type: "image"
+  - waypoint_id: "waypoint_1"
+    gt_entities:
+      number: null
+    is_target: false
+    media:
+      - path: "data/demo/sample_1.jpg"
+        type: "image"
+  - waypoint_id: "waypoint_2"
+    gt_entities:
+      number: 5
+    is_target: false
+    media:
+      - path: "data/demo/sample_2.jpg"
+        type: "image"
+  - waypoint_id: "waypoint_3"
+    gt_entities:
+      number: 12
+    is_target: true
+    media:
+      - path: "data/demo/sample_3.jpg"
+        type: "image"
+  - waypoint_id: "waypoint_4"
+    gt_entities:
+      number: 29
+    is_target: false
+    media:
+      - path: "data/demo/sample_4.jpg"
+        type: "image"
+  - waypoint_id: "waypoint_5"
+    gt_entities:
+      number: null
+    is_target: false
+    media:
+      - path: "data/demo/sample_5.jpg"
+        type: "image"
