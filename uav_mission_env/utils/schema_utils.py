@@ -39,32 +39,38 @@ def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[
     """
     grammar_lines = []
 
-    # 1. Basic Primitives (Removed trailing 'space' from these)
-    grammar_lines.append(r'space ::= [ \t\n]*')
-    grammar_lines.append(r'char ::= [^"\\\x7F\x00-\x1F] | [\\] (["\\bfnrt] | "u" [0-9a-fA-F]{4})')
-    grammar_lines.append(r'string ::= "\"" char* "\""')  # Removed trailing space
-    grammar_lines.append(r'boolean ::= ("true" | "false")') # Removed trailing space
-    grammar_lines.append(r'null ::= "null"') # Removed trailing space
-    grammar_lines.append(r'number ::= ("-"? ([0-9] | [1-9] [0-9]*)) ("." [0-9]+)? ([eE] [-+]? [0-9]+)?') # Removed trailing space
+    # 1. Spacing Primitives (The "Tuning" Part)
+    # 'ws': Structural whitespace (newlines, tabs, spaces). Used between fields.
+    grammar_lines.append(r'ws ::= [ \t\n]*')
+    # 'sp': Inline space (strictly space/tab). Used for "key": value alignment.
+    grammar_lines.append(r'sp ::= [ \t]*') 
 
-    # 2. Recursive JSON (Added 'space' to the structure)
+    # 2. Basic Types
+    grammar_lines.append(r'char ::= [^"\\\x7F\x00-\x1F] | [\\] (["\\bfnrt] | "u" [0-9a-fA-F]{4})')
+    grammar_lines.append(r'string ::= "\"" char* "\""')
+    grammar_lines.append(r'boolean ::= ("true" | "false")')
+    grammar_lines.append(r'null ::= "null"')
+    grammar_lines.append(r'number ::= ("-"? ([0-9] | [1-9] [0-9]*)) ("." [0-9]+)? ([eE] [-+]? [0-9]+)?')
+
+    # 3. Recursive Structure (Using 'ws' for structure, 'sp' for inline)
     grammar_lines.append(r'gen-value ::= string | number | gen-object | gen-array | boolean | null')
     
-    # Logic: "{" space ( key space ":" space value space ("," space key space ":" space value space)* )? "}"
-    grammar_lines.append(r'gen-object ::= "{" space (string space ":" space gen-value space ("," space string space ":" space gen-value space)*)? "}"')
+    # Logic: { ws "key" sp : sp value ( , ws "key" sp : sp value )* ws }
+    grammar_lines.append(r'gen-object ::= "{" ws (string sp ":" sp gen-value ("," ws string sp ":" sp gen-value)*)? ws "}"')
     
-    # Logic: "[" space ( value space ("," space value space)* )? "]"
-    grammar_lines.append(r'gen-array ::= "[" space (gen-value space ("," space gen-value space)*)? "]"')
+    # Logic: [ ws value ( , ws value )* ws ]
+    grammar_lines.append(r'gen-array ::= "[" ws (gen-value ("," ws gen-value)*)? ws "]"')
 
-    # 3. Thinking Rule (Unchanged)
+    # 4. Thinking Rule (Unchanged)
     grammar_lines.append(r'thinking-char ::= [^<] | ( "<" [^/] )')
     grammar_lines.append(r'thinking-content ::= thinking-char {0,__THINK_LIMIT__}')
-    grammar_lines.append(r'thinking ::= "<think>" thinking-content "</think>"')
+    grammar_lines.append(r'thinking ::= "<think>" thinking-content "</think>" "\n"')
 
-    # 4. Field Definitions
+    # 5. Field Definitions
     field_kv_rules = []
 
     for field in output_keys:
+        # (Same field parsing logic as before)
         if len(field) == 1 and isinstance(list(field.values())[0], dict):
             f_name = list(field.keys())[0]
             f_props = list(field.values())[0]
@@ -74,39 +80,37 @@ def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[
 
         f_type = f_props.get("type", "string")
         f_len = f_props.get("max_length", 250)
-
+        
         val_rule_name = f"val-{f_name}"
 
-        # Note: We remove 'space' from the end of all these specific value rules
+        # Define specific rules per type
         if f_type == "string":
             grammar_lines.append(f'{val_rule_name} ::= "\\"" char{{0,{f_len}}} "\\""')
+        elif f_type == "boolean":
+            grammar_lines.append(f'{val_rule_name} ::= boolean')
+        elif f_type in ["number", "integer"]:
+            grammar_lines.append(f'{val_rule_name} ::= number')
         elif f_type == "object":
-            if f_name == "tool_call":
-                if tool_name_list:
-                    tool_opts = " | ".join([f'"\\"{t}\\\""' for t in tool_name_list])
-                    grammar_lines.append(f'tool-name ::= ({tool_opts})') # No trailing space
-                else:
-                    grammar_lines.append(f'tool-name ::= string')
-
-                # tool_call object structure with explicit spacing
-                grammar_lines.append(f'{val_rule_name} ::= "{{" space "\\"name\\"" space ":" space tool-name space "," space "\\"parameters\\"" space ":" space gen-object space "}}"')
+            if f_name == "tool_call" and tool_name_list:
+                tool_opts = " | ".join([f'"\\"{t}\\\""' for t in tool_name_list])
+                grammar_lines.append(f'tool-name ::= ({tool_opts})')
+                # Strict spacing for tool calls: { ws "name" sp : sp ... }
+                grammar_lines.append(f'{val_rule_name} ::= "{{" ws "\\"name\\"" sp ":" sp tool-name "," ws "\\"parameters\\"" sp ":" sp gen-object ws "}}"')
             else:
                 grammar_lines.append(f'{val_rule_name} ::= gen-object')
         else:
             grammar_lines.append(f'{val_rule_name} ::= gen-value')
 
-        # KV Rule: "key" space ":" space value
-        # We do NOT put space at the end here, we handle it in the joiner below
-        kv_rule = f'"\\"{f_name}\\"" space ":" space {val_rule_name}'
+        # Key-Value separator rule: "key" sp : sp value
+        kv_rule = f'"\\"{f_name}\\"" sp ":" sp {val_rule_name}'
         field_kv_rules.append(kv_rule)
 
-    # 5. Root Object
-    # Joiner must provide the separator: space "," space
-    fields_joined = ' "," space '.join(field_kv_rules)
+    # 6. Root Object Construction
+    # Separator: Comma + Structural Whitespace (allows newlines between fields)
+    fields_joined = ' "," ws '.join(field_kv_rules)
     
-    # Root structure: "{" space FIELDS space "}"
-    grammar_lines.append(f'json-output ::= "{{" space {fields_joined} space "}}"')
-
-    grammar_lines.append(r'root ::= thinking? json-output')
+    # Root: thinking? ws { ws fields ws } ws
+    grammar_lines.append(f'json-output ::= "{{" ws {fields_joined} ws "}}" ws')
+    grammar_lines.append(r'root ::= thinking? ws json-output')
 
     return "\n".join(grammar_lines)
