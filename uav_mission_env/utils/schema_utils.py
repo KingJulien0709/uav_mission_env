@@ -59,7 +59,7 @@ def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[
     # 3. Thinking Rule (Unchanged)
     grammar_lines.append(r'thinking-char ::= [^<] | ( "<" [^/] )')
     grammar_lines.append(r'thinking-content ::= thinking-char {0,__THINK_LIMIT__}')
-    grammar_lines.append(r'thinking ::= "<think>" thinking-content "</think>" space')
+    grammar_lines.append(r'thinking ::= "<think>" thinking-content "</think>"')
 
     # 4. Field Definitions
     field_kv_rules = []
