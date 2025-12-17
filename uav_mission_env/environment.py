@@ -27,6 +27,10 @@ class MissionEnvironment():
         # Load default configurations if not provided
         if data_config is None:
             data_config = self._load_default_data_config()
+            
+        # Allow mission_config_path to be passed in data_config
+        if mission_config_path is None:
+            mission_config_path = data_config.get("mission_config_path")
         
         if state_config is None:
             state_config = self._load_default_state_config()
