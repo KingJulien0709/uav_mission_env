@@ -105,7 +105,7 @@ def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[
     fields_joined = ' "," space '.join(field_kv_rules)
     
     # Root structure: "{" space FIELDS space "}"
-    grammar_lines.append(f'json-output ::= "{{" space {fields_joined} space "}}" space')
+    grammar_lines.append(f'json-output ::= "{{" space {fields_joined} space "}}"')
 
     grammar_lines.append(r'root ::= thinking? json-output')
 
