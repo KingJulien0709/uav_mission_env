@@ -102,7 +102,7 @@ def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[
 
     # 5. Root Object
     # Joiner must provide the separator: space "," space
-    fields_joined = '","'.join(field_kv_rules)
+    fields_joined = '"," space '.join(field_kv_rules)
     
     # Root structure: "{" space FIELDS space "}"
     grammar_lines.append(f'json-output ::= "{{" space {fields_joined} space "}}" space')
