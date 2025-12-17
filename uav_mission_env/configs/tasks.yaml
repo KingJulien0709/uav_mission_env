@@ -1,0 +1,5 @@
+tasks:
+  find_number:
+    description: "Find a specific house number"
+    template: "Find the box with number {number}."
+    required_keys: ["number"]

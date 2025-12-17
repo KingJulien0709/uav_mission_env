@@ -1,0 +1,17 @@
+instruction: "Find the box with number 42."
+waypoints:
+  - waypoint_id: "wp_start"
+    gt_entities:
+      number: 1
+    is_target: false
+    media: {}
+  - waypoint_id: "wp_target"
+    gt_entities:
+      number: 42
+    is_target: true
+    media: {}
+  - waypoint_id: "wp_distractor"
+    gt_entities:
+      number: 7
+    is_target: false
+    media: {}

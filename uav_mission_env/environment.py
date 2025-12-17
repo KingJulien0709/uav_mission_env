@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Type, List
 from .tools import Tool, Observation, Verifier, ToolManager, ToolValidator
 from .missions.mission_manager import MissionManager
+from .missions.task import TaskRegistry
+from .missions.mission_generator import MissionGenerator, ConfigMissionGenerator
 from .state_manager import StateManager
 from .utils.schema_utils import create_json_schema_from_keys, create_gbnf_grammar
 
@@ -17,8 +19,9 @@ class MissionEnvironment():
         "dataset_metadata_path": "uav_mission_env/data/synthetic_dataset/metadata.json",
     }
     DEFAULT_STATE_CONFIG_PATH = "uav_mission_env/configs/minimal_viable_states.yaml"
+    DEFAULT_TASK_CONFIG_PATH = "uav_mission_env/configs/tasks.yaml"
     
-    def __init__(self, data_config: Optional[dict] = None, state_config: Optional[dict] = None, max_turns: int = 10):
+    def __init__(self, data_config: Optional[dict] = None, state_config: Optional[dict] = None, task_config_path: Optional[str] = None, mission_generator: Optional[MissionGenerator] = None, mission_config_path: Optional[str] = None, max_turns: int = 10):
         self.max_turns = max_turns
         
         # Load default configurations if not provided
@@ -27,12 +30,25 @@ class MissionEnvironment():
         
         if state_config is None:
             state_config = self._load_default_state_config()
+
+        if task_config_path is None:
+            task_config_path = self._load_default_task_config_path()
         
         self.state_config = state_config
         self.current_state = state_config.get('initial_state', 'execution')
+
+        # Initialize Task Registry
+        self.task_registry = TaskRegistry(task_config_path)
+
+        # Determine mission generator
+        if mission_generator is None and mission_config_path is not None:
+            mission_generator = ConfigMissionGenerator(mission_config_path)
+
         self.mission_manager = MissionManager(
             dataset_metadata_path=data_config.get("dataset_metadata_path", ""),
-            random_generator=np.random.RandomState(data_config.get("random_seed", 42))
+            random_generator=np.random.RandomState(data_config.get("random_seed", 42)),
+            task_registry=self.task_registry,
+            mission_generator=mission_generator
         )
         self.state: dict = {}
         self.turns_performed = 0
@@ -79,6 +95,20 @@ class MissionEnvironment():
         with open(config_path, 'r') as f:
             return yaml.safe_load(f)
 
+    @classmethod
+    def _load_default_task_config_path(cls) -> str:
+        """Load default task configuration path."""
+        package_dir = Path(__file__).parent
+        config_path = package_dir / "configs" / "tasks.yaml"
+        config_path = config_path.resolve()
+        
+        if not config_path.exists():
+            # It's okay if it doesn't exist, we just won't have tasks
+            # But let's return the path anyway so TaskRegistry can handle the error or we can check later
+            pass
+        
+        return str(config_path)
+
     def _setup_tools(self) -> None:
         """Initialize tools with necessary dependencies."""
         # Collect unique tool names from all states
@@ -124,11 +154,11 @@ class MissionEnvironment():
         for verifier_name, reward_factor in verifier_configs.items():
             self.verifiers[verifier_name] = Verifier.get_verifier_by_name(verifier_name, reward_factor=reward_factor)
 
-    def reset(self, seed: Optional[int] = None) -> dict:
+    def reset(self, seed: Optional[int] = None, custom_plan: str = None, target_criteria: dict = None) -> dict:
         self.state.clear()
         if seed is not None:
             self.state["seed"] = seed
-        self.mission_manager.reset(seed=seed)
+        self.mission_manager.reset(seed=seed, custom_plan=custom_plan, target_criteria=target_criteria)
         self.turns_performed = 0
         self.current_state = self.state_config.get('initial_state', 'execution')
         return self._get_observation()
