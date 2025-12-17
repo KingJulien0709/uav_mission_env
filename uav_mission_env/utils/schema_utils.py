@@ -40,7 +40,7 @@ def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[
     grammar_lines = []
 
     # 1. Basic Primitives (Removed trailing 'space' from these)
-    grammar_lines.append(r'space ::= | " " | "\n" [ \t]{0,10}')  # Modified to limit whitespace
+    grammar_lines.append(r'space ::= [ \t\n]*')
     grammar_lines.append(r'char ::= [^"\\\x7F\x00-\x1F] | [\\] (["\\bfnrt] | "u" [0-9a-fA-F]{4})')
     grammar_lines.append(r'string ::= "\"" char* "\""')  # Removed trailing space
     grammar_lines.append(r'boolean ::= ("true" | "false")') # Removed trailing space
@@ -102,7 +102,7 @@ def create_gbnf_grammar(output_keys: List[Dict[str, Any]], tool_name_list: List[
 
     # 5. Root Object
     # Joiner must provide the separator: space "," space
-    fields_joined = '","space'.join(field_kv_rules)
+    fields_joined = '","'.join(field_kv_rules)
     
     # Root structure: "{" space FIELDS space "}"
     grammar_lines.append(f'json-output ::= "{{" space {fields_joined} space "}}" space')
