@@ -38,7 +38,10 @@ env = MissionEnvironment()
 
 # Reset and step
 obs = env.reset(seed=42)
-action = {"next_goal": "waypoint_1"}
+action = {
+    "tool_name": "next_goal",
+    "parameters": {"next_goal": "waypoint_1"}
+}
 obs, reward, terminated, truncated, info = env.step(action)
 
 env.close()
@@ -49,38 +52,72 @@ The default configuration uses:
 - **Dataset**: `uav_mission_env/data/synthetic_dataset/metadata.json`
 - **Random seed**: 42
 
-### Custom Configuration
+### Custom Configuration (Bring Your Own Data)
 
-You can also provide custom configurations:
+The environment is designed to be highly configurable. You can provide a single configuration dictionary to customize states, tasks, and datasets.
 
 ```python
 from uav_mission_env import MissionEnvironment
-import yaml
 
-# Load state configuration
-with open('path/to/your/config.yaml', 'r') as f:
-    state_config = yaml.safe_load(f)
-
-# Configure data
-data_config = {
-    "dataset_metadata_path": "path/to/metadata.json",
-    "random_seed": 123
+# 1. Sampling missions from a custom dataset (BYOD)
+config = {
+    "state_config": { ... }, # Optional: custom state/tool definitions
+    "data_config": {
+        "dataset_metadata_path": "path/to/your/external/dataset/metadata.json",
+        "random_seed": 123
+    }
 }
+env = MissionEnvironment(config=config)
 
-# Create environment with custom configuration
-env = MissionEnvironment(
-    data_config=data_config,
-    state_config=state_config,
-    max_turns=10
-)
+# 2. Using a specific presampled mission
+config = {
+    "mission_config": {
+        "instruction": "Find the red box at waypoint_2",
+        "waypoints": [
+            {
+                "id": "waypoint_1", 
+                "gt_entities": {}, 
+                "is_target": False, 
+                "media": []
+            },
+            {
+                "id": "waypoint_2", 
+                "gt_entities": {
+                  "color": "red",
+                }, 
+                "is_target": True, 
+                "media": ["path/to/image.jpg"]
+            }
+        ]
+    }
+}
+env = MissionEnvironment(config=config)
 
 # Reset and step
 obs = env.reset(seed=42)
-action = {"next_goal": "waypoint_1"}
+action = {
+    "tool_name": "next_goal",
+    "parameters": {"next_goal": "waypoint_2"}
+}
 obs, reward, terminated, truncated, info = env.step(action)
-
-env.close()
 ```
+
+### Configuration Structure
+
+The `config` dictionary supports the following keys:
+- `state_config`: (dict) Defines the states, available tools for each state, and transition logic.
+- `data_config`: (dict) Configuration for sampling missions on the go.
+    - `dataset_metadata_path`: Path to the JSON metadata file for your dataset.
+    - `random_seed`: Seed for reproducibility.
+- `mission_config`: (dict) A complete mission definition. If provided, the environment will use this specific mission instead of sampling.
+    - `instruction`: (str) The mission goal/instruction.
+    - `waypoints`: (list) List of waypoint dictionaries:
+        - `id`: (str) Unique identifier (e.g., "waypoint_1").
+        - `gt_entities`: (dict) Ground truth entities at this location.
+        - `is_target`: (bool) Whether this is the target location.
+        - `media`: (list) List of paths to images/videos for this location.
+- `task_config_path`: (str) Path to a custom tasks YAML file.
+- `mission_config_path`: (str) Path to a YAML file containing a presampled mission.
 
 ### State Transitions
 
