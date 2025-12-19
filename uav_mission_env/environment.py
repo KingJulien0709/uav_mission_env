@@ -7,54 +7,23 @@ from typing import Any, Dict, Optional, Type, List
 from .tools import Tool, Observation, Verifier, ToolManager, ToolValidator
 from .missions.mission_manager import MissionManager
 from .missions.task import TaskRegistry
-from .missions.mission_generator import MissionGenerator, ConfigMissionGenerator
+from .missions.mission_generator import MissionGenerator, ConfigMissionGenerator, PresampledMissionGenerator, RandomMissionGenerator
+from .missions.mission import Mission
+from .missions.waypoint import Waypoint
 from .state_manager import StateManager
 from .utils.schema_utils import create_json_schema_from_keys, create_gbnf_grammar
+from .utils.config_loader import ConfigLoader
 
 
 class MissionEnvironment():
-    # Default configuration paths
-    DEFAULT_DATA_CONFIG = {
-        "random_seed": 42,
-        "dataset_metadata_path": "uav_mission_env/data/synthetic_dataset/metadata.json",
-    }
-    DEFAULT_STATE_CONFIG_PATH = "uav_mission_env/configs/minimal_viable_states.yaml"
-    DEFAULT_TASK_CONFIG_PATH = "uav_mission_env/configs/tasks.yaml"
     
-    def __init__(self, data_config: Optional[dict] = None, state_config: Optional[dict] = None, task_config_path: Optional[str] = None, mission_generator: Optional[MissionGenerator] = None, mission_config_path: Optional[str] = None, max_turns: int = 10):
+    def __init__(self, config: Optional[dict] = None, max_turns: int = 10):
         self.max_turns = max_turns
         
-        # Load default configurations if not provided
-        if data_config is None:
-            data_config = self._load_default_data_config()
+        self.state_config, self.task_registry, self.mission_manager = ConfigLoader.load_config(config=config)
             
-        # Allow mission_config_path to be passed in data_config
-        if mission_config_path is None:
-            mission_config_path = data_config.get("mission_config_path")
-        
-        if state_config is None:
-            state_config = self._load_default_state_config()
+        self.current_state = self.state_config.get('initial_state', 'execution')
 
-        if task_config_path is None:
-            task_config_path = self._load_default_task_config_path()
-        
-        self.state_config = state_config
-        self.current_state = state_config.get('initial_state', 'execution')
-
-        # Initialize Task Registry
-        self.task_registry = TaskRegistry(task_config_path)
-
-        # Determine mission generator
-        if mission_generator is None and mission_config_path is not None:
-            resolved_path = self._resolve_mission_config_path(mission_config_path)
-            mission_generator = ConfigMissionGenerator(resolved_path)
-
-        self.mission_manager = MissionManager(
-            dataset_metadata_path=data_config.get("dataset_metadata_path", ""),
-            random_generator=np.random.RandomState(data_config.get("random_seed", 42)),
-            task_registry=self.task_registry,
-            mission_generator=mission_generator
-        )
         self.state: dict = {}
         self.turns_performed = 0
         
@@ -68,67 +37,6 @@ class MissionEnvironment():
         self._setup_tools()
         self._setup_observations_tools()
         self._setup_verifiers()
-
-    @classmethod
-    def _load_default_data_config(cls) -> dict:
-        """Load default data configuration."""
-        config = cls.DEFAULT_DATA_CONFIG.copy()
-        
-        # Try to resolve the dataset path relative to the package location
-        package_dir = Path(__file__).parent
-        dataset_path = package_dir / "data" / "synthetic_dataset" / "metadata.json"
-        dataset_path = dataset_path.resolve()
-        
-        if dataset_path.exists():
-            config["dataset_metadata_path"] = str(dataset_path)
-        
-        return config
-    
-    @classmethod
-    def _load_default_state_config(cls) -> dict:
-        """Load default state configuration from YAML file."""
-        package_dir = Path(__file__).parent
-        config_path = package_dir / "configs" / "minimal_viable_states.yaml"
-        config_path = config_path.resolve()
-        
-        if not config_path.exists():
-            raise FileNotFoundError(
-                f"Default state config not found at {config_path}. "
-                f"Please provide a state_config parameter."
-            )
-        
-        with open(config_path, 'r') as f:
-            return yaml.safe_load(f)
-
-    @classmethod
-    def _load_default_task_config_path(cls) -> str:
-        """Load default task configuration path."""
-        package_dir = Path(__file__).parent
-        config_path = package_dir / "configs" / "tasks.yaml"
-        config_path = config_path.resolve()
-        
-        if not config_path.exists():
-            # It's okay if it doesn't exist, we just won't have tasks
-            # But let's return the path anyway so TaskRegistry can handle the error or we can check later
-            pass
-        
-        return str(config_path)
-
-    @classmethod
-    def _resolve_mission_config_path(cls, config_path: str) -> str:
-        """Resolve mission config path, checking default location if file not found."""
-        path_obj = Path(config_path)
-        if path_obj.exists():
-            return str(path_obj.resolve())
-            
-        # Check in default configs directory
-        package_dir = Path(__file__).parent
-        default_path = package_dir / "configs" / config_path
-        if default_path.exists():
-            return str(default_path.resolve())
-            
-        # Return original path to let ConfigMissionGenerator handle the error (or raise here)
-        return config_path
 
     def _setup_tools(self) -> None:
         """Initialize tools with necessary dependencies."""
