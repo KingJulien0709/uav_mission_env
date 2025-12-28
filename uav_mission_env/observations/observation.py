@@ -3,6 +3,8 @@ from ..missions.waypoint import Waypoint
 
 
 class Observation:
+    registry = {}
+
     def __init__(self, name: str, mission_manager: MissionManager = None):
         self.name = name
         self.mission_manager = mission_manager
@@ -12,17 +14,14 @@ class Observation:
     
     @classmethod
     def get_observation_by_name(cls, observation_name: str, mission_manager=None):
-        observation_classes = {
-            "current_location": CurrentLocationObservation,
-            "plan": PlanObservation,
-            "locations_to_be_visited": LocationsToBeVisitedObservation,
-            "past_locations": PastLocationsObservation,
-            "waypoint": CurrentWaypointObservation,
-        }
-        observation_class = observation_classes.get(observation_name)
+        observation_class = cls.registry.get(observation_name)
         if observation_class is None:
             raise ValueError(f"Observation '{observation_name}' not found.")
         return observation_class(mission_manager=mission_manager)
+
+    @classmethod
+    def list_available_observations(cls):
+        return list(cls.registry.keys())
     
 class CurrentLocationObservation(Observation):
     def __init__(self, mission_manager: MissionManager = None):
@@ -85,3 +84,12 @@ class CurrentWaypointObservation(Observation):
         for media in media_list:
             encoded_media.append({"type": media.get("type"), "media": load_and_encode_image(media.get("path"), image_resolution=image_resolution)})    
         return encoded_media
+
+Observation.registry = {
+    "current_location": CurrentLocationObservation,
+    "plan": PlanObservation,
+    "locations_to_be_visited": LocationsToBeVisitedObservation,
+    "past_locations": PastLocationsObservation,
+    "waypoint": CurrentWaypointObservation,
+}
+

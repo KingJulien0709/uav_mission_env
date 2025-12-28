@@ -4,7 +4,9 @@ import yaml
 import os
 from pathlib import Path
 from typing import Any, Dict, Optional, Type, List
-from .tools import Tool, Observation, Verifier, ToolManager, ToolValidator
+from .tools import Tool, ToolManager, ToolValidator
+from .observations import Observation
+from .verifiers import Verifier
 from .missions.mission_manager import MissionManager
 from .missions.task import TaskRegistry
 from .missions.mission_generator import MissionGenerator, ConfigMissionGenerator, PresampledMissionGenerator, RandomMissionGenerator
@@ -101,7 +103,7 @@ class MissionEnvironment():
         reward = self.verify(action_outputs)
 
         # Perform state transition
-        transition_context = {**self._get_observation(), **self.state}
+        transition_context = {**self._get_observation(), **self.state, **action}
         self.current_state = self.state_manager.get_next_state(self.current_state, transition_context)
         
         # Get observation for the new state
@@ -229,3 +231,13 @@ class MissionEnvironment():
             "gbnf_grammar": gbnf_grammar
         }
         return observation_format
+
+    @staticmethod
+    def list_available_tools() -> list[str]:
+        """List all available tools implemented in the package."""
+        return Tool.list_available_tools()
+
+    @staticmethod
+    def list_available_observations() -> list[str]:
+        """List all available observations implemented in the package."""
+        return Observation.list_available_observations()
