@@ -1,6 +1,4 @@
-
-
-
+from ..utils import media_utils
 
 class Tool:
     registry = {}
@@ -71,14 +69,67 @@ class ReportFinalConclusionTool(Tool):
         log_args = self.log(action_args)
         return action_args or {}
 
+class CropZoomImageTool(Tool):
+    def __init__(self, logging_enabled: bool = False, mission_manager=None):
+        super().__init__(name="crop_zoom_image", logging_enabled=logging_enabled, mission_manager=mission_manager)
+
+    def use(self, action_args: dict = None):
+        image_b64 = action_args.get("image")
+        bbox = action_args.get("bbox")
+        
+        if not image_b64 or not bbox:
+                return self.log(action_args)
+
+        try:
+            img = media_utils.base64_str_to_pil_image(image_b64)
+            width, height = img.size
+            
+            x_min = int(bbox["x_min"] * width)
+            y_min = int(bbox["y_min"] * height)
+            x_max = int(bbox["x_max"] * width)
+            y_max = int(bbox["y_max"] * height)
+            
+            cropped_img = img.crop((x_min, y_min, x_max, y_max))
+            cropped_b64 = media_utils.pil_image_to_base64_str(cropped_img)
+            
+            result = {"cropped_image": cropped_b64}
+            result.update(self.log(action_args))
+            return result
+        except Exception as e:
+            return {"error": str(e), **self.log(action_args)}
+
+class NavigateToNewLandingZoneTool(Tool):
+    def __init__(self, logging_enabled: bool = False, mission_manager=None):
+        super().__init__(name="navigate_to_new_landing_zone", logging_enabled=logging_enabled, mission_manager=mission_manager)
+
+    def use(self, action_args: dict = None):
+        return self.log(action_args)
+
+class ActivateLandingProcessTool(Tool):
+    def __init__(self, logging_enabled: bool = False, mission_manager=None):
+        super().__init__(name="activate_landing_process", logging_enabled=logging_enabled, mission_manager=mission_manager)
+
+    def use(self, action_args: dict = None):
+        return self.log(action_args)
+
+class ActivateTrackingModeTool(Tool):
+    def __init__(self, logging_enabled: bool = False, mission_manager=None):
+        super().__init__(name="activate_tracking_mode", logging_enabled=logging_enabled, mission_manager=mission_manager)
+
+    def use(self, action_args: dict = None):
+        return self.log(action_args)
+
 
 Tool.registry = {
     "next_goal": NextGoalTool,
     "report_final_conclusion": ReportFinalConclusionTool,
+    "crop_zoom_image": CropZoomImageTool,
+    "navigate_to_new_landing_zone": NavigateToNewLandingZoneTool,
+    "activate_landing_process": ActivateLandingProcessTool,
+    "activate_tracking_mode": ActivateTrackingModeTool,
 }
 
-    
 
 
 
-    
+

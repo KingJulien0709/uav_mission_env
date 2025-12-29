@@ -27,3 +27,63 @@ tools:
           type: "string"
           description: "The specific waypoint ID or name matching the conclusion (empty string if none)."
       required: [mission_completed_successfully, conclusion, waypoint]
+  - name: crop_zoom_image
+    description: |
+      Crops a zoomed-in image from the provided full image based on the specified bounding box coordinates.
+    parameters:
+      type: "object"
+      properties:
+        image:
+          type: "string"
+          description: "Base64 encoded string of the full image."
+        bbox:
+          type: "object"
+          description: "Bounding box coordinates for cropping. Coordinates are relative to the full image and normalized between 0 and 1."
+          properties:
+            x_min:
+              type: "float"
+              description: "Minimum x-coordinate of the bounding box."
+            y_min:
+              type: "float"
+              description: "Minimum y-coordinate of the bounding box."
+            x_max:
+              type: "float"
+              description: "Maximum x-coordinate of the bounding box."
+            y_max:
+              type: "float"
+              description: "Maximum y-coordinate of the bounding box."
+          required: [x_min, y_min, x_max, y_max]
+      required: [image, bbox]
+  - name: navigate_to_new_landing_zone
+    description: |
+      Navigate the UAV to a new landing zone specified by top, left, bottom, and right directions of the ground image.
+    parameters:
+      type: "object"
+      properties: {
+        direction:
+          type: "string"
+          description: "Direction to navigate the UAV. Options are 'top'|'left'|'bottom'|'right'. 
+          The direction in which direction of the ground image the UAV should move towards."
+      }
+  - name: activate_landing_process
+    description: |
+      Activates the landing process of the UAV to prepare for landing.
+    parameters:
+      type: "object"
+      properties: {
+        activate:
+          type: "boolean"
+          description: "Set to True to activate the landing process."
+      }
+      required: [activate]
+  - name: activate_tracking_mode
+    description: |
+      Activates the tracking mode of the UAV to follow a specified target.
+    parameters:
+      type: "object"
+      properties: {
+        target_description:
+          type: "string"
+          description: "Extremely brief description of the target to be tracked."
+      }
+      required: [target_description]
